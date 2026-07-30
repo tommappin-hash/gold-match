@@ -25,7 +25,8 @@ function BookPage() {
             Why the first restoration matters — and how gold changes the equation for patients, dentists, and the future of caries treatment.
           </p>
           <a
-            href="#download"
+            href="/book.pdf"
+            download
             className="mt-8 inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-base font-semibold text-amber-700 shadow-lg transition-all hover:bg-amber-50"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
@@ -34,8 +35,8 @@ function BookPage() {
             </svg>
             Download Free PDF
           </a>
-          <p id="download" className="mt-3 text-sm text-amber-100/70">
-            PDF coming soon — read the full book below.
+          <p className="mt-3 text-sm text-amber-100/70">
+            167 KB PDF — formatted for printing and reading offline.
           </p>
         </div>
       </section>
@@ -70,11 +71,11 @@ function BookPage() {
           <article className="min-w-0 flex-1">
             <div className="rounded-2xl bg-white p-8 sm:p-12 shadow-sm border border-gray-200">
               <div
-                className="prose prose-lg max-w-none
-                  prose-headings:text-gray-900
-                  prose-p:text-gray-700 prose-p:leading-relaxed
-                  prose-blockquote:border-amber-500 prose-blockquote:bg-amber-50 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r-lg prose-blockquote:not-italic prose-blockquote:text-gray-700
-                  prose-strong:text-gray-900
+                className="max-w-none
+                  [&_p]:text-gray-700 [&_p]:leading-relaxed [&_p]:mb-4
+                  [&_blockquote]:border-l-4 [&_blockquote]:border-amber-500 [&_blockquote]:bg-amber-50 [&_blockquote]:py-1 [&_blockquote]:px-4 [&_blockquote]:rounded-r-lg [&_blockquote]:not-italic [&_blockquote]:text-gray-700 [&_blockquote]:mb-4
+                  [&_strong]:text-gray-900
+                  [&_em]:italic
                   [&_.book-part-title]:text-2xl [&_.book-part-title]:font-bold [&_.book-part-title]:text-amber-600 [&_.book-part-title]:mt-12 [&_.book-part-title]:mb-6 [&_.book-part-title]:pb-3 [&_.book-part-title]:border-b-2 [&_.book-part-title]:border-amber-200 [&_.book-part-title:first-child]:mt-0
                   [&_.book-chapter-title]:text-xl [&_.book-chapter-title]:font-semibold [&_.book-chapter-title]:text-gray-900 [&_.book-chapter-title]:mt-8 [&_.book-chapter-title]:mb-4 [&_.book-chapter-title]:scroll-mt-24
                   [&_hr]:my-8 [&_hr]:border-gray-200
