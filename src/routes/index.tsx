@@ -33,9 +33,9 @@ function Home() {
               restorations near you
             </h1>
             <p className="mt-6 text-xl leading-relaxed text-gray-600 sm:text-2xl">
-              GoldMatch connects patients who want gold crowns, bridges, inlays,
+              Gold Dentistry Network connects patients who want gold crowns, bridges, inlays,
               and onlays with dentists who specialize in them. No more calling
-              around — find the right provider in minutes.
+              around — find the right dentist in minutes.
             </p>
 
             {/* Quick search bar on hero */}
@@ -110,7 +110,7 @@ function Home() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              How GoldMatch works
+              How Gold Dentistry Network works
             </h2>
             <p className="mt-4 text-lg text-gray-600">
               Three simple steps to find the right gold dentist for you.
@@ -192,83 +192,82 @@ function Home() {
               </ul>
             </div>
             <div className="rounded-2xl bg-amber-500/10 p-8 sm:p-12">
-              <blockquote className="text-lg font-medium text-gray-900">
-                "I drove 3 hours for my gold crowns and it was worth every mile.
-                GoldMatch saved me from calling a dozen offices."
-              </blockquote>
-              <p className="mt-4 text-sm text-gray-500">
-                — GoldMatch patient, Austin TX
-              </p>
+              <div className="grid gap-6 sm:grid-cols-2">
+                <div className="text-center">
+                  <p className="text-4xl font-bold text-amber-600">30+</p>
+                  <p className="mt-1 text-sm text-gray-600">Year average lifespan</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-4xl font-bold text-amber-600">0.1%</p>
+                  <p className="mt-1 text-sm text-gray-600">Fracture rate</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-4xl font-bold text-amber-600">97%</p>
+                  <p className="mt-1 text-sm text-gray-600">15-year survival rate</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-4xl font-bold text-amber-600">2-3×</p>
+                  <p className="mt-1 text-sm text-gray-600">Longer than porcelain</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials / Stats */}
-      <section className="bg-white py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Why patients choose gold
-            </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              Gold restorations have stood the test of time — and for good reason.
-            </p>
-          </div>
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { value: "30+", label: "Year average lifespan" },
-              { value: "0.1%", label: "Fracture rate (vs. 7% for porcelain)" },
-              { value: "97%", label: "Survival rate at 15 years" },
-              { value: "50+", label: "Dentists listed on GoldMatch" },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="rounded-2xl border border-gray-100 bg-gray-50/50 p-6 text-center"
-              >
-                <p className="text-4xl font-bold text-amber-500">{stat.value}</p>
-                <p className="mt-2 text-sm text-gray-600">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
-            {[
-              {
-                quote:
-                  "My gold inlays from Dr. Chen have been going strong for 18 years. Best dental decision I ever made.",
-                author: "Sarah L., San Francisco",
-              },
-              {
-                quote:
-                  "I found a gold specialist 45 minutes from home who did beautiful work. The directory made it so easy.",
-                author: "Michael R., Nashville",
-              },
-              {
-                quote:
-                  "After two failed porcelain crowns, I switched to gold on the recommendation of a GoldMatch dentist. Zero issues since.",
-                author: "Pat D., Chicago",
-              },
-            ].map((t) => (
-              <div
-                key={t.author}
-                className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
-              >
-                <svg
-                  className="h-8 w-8 text-amber-300"
-                  fill="currentColor"
-                  viewBox="0 0 32 32"
-                >
-                  <path d="M10 8c-3.3 0-6 2.7-6 6v10h10V14H8c0-1.1.9-2 2-2V8zm12 0c-3.3 0-6 2.7-6 6v10h10V14h-6c0-1.1.9-2 2-2V8z" />
-                </svg>
-                <p className="mt-3 text-sm leading-relaxed text-gray-600">
-                  "{t.quote}"
-                </p>
-                <p className="mt-3 text-xs font-medium text-gray-500">
-                  — {t.author}
-                </p>
-              </div>
-            ))}
-          </div>
+      {/* Versalius Mundi CTA */}
+      <section className="bg-gradient-to-br from-[#0A1628] via-[#11244D] to-[#0A1628] py-20 sm:py-28">
+        <div className="mx-auto max-w-4xl px-6 text-center">
+          <p className="text-sm font-medium uppercase tracking-widest text-[#C8910B]" style={{ fontFamily: "Outfit, sans-serif" }}>
+            Animated Series
+          </p>
+          <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl" style={{ fontFamily: "Bangers, cursive" }}>
+            <span className="bg-gradient-to-r from-[#C8910B] via-[#E5B83C] to-[#C8910B] bg-clip-text text-transparent">
+              Versalius Mundi
+            </span>
+          </h2>
+          <p className="mt-4 text-lg leading-relaxed text-blue-200/70 max-w-2xl mx-auto">
+            Enter the microscopic battlefield inside every tooth. Dental materials become
+            superheroes, bacteria launch invasions, and the patient&apos;s sovereignty hangs
+            in the balance. This is the story your dentist never told you.
+          </p>
+          <Link
+            to="/versalius"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#C8910B] px-6 py-3 text-sm font-bold text-[#0A1628] shadow-lg shadow-[#C8910B]/25 transition-all hover:bg-[#E5B83C]"
+          >
+            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                clipRule="evenodd"
+              />
+            </svg>
+            Start Watching
+          </Link>
+        </div>
+      </section>
+
+      {/* Book CTA */}
+      <section className="bg-white py-20 sm:py-28">
+        <div className="mx-auto max-w-4xl px-6 text-center">
+          <p className="text-sm font-medium uppercase tracking-widest text-amber-600">
+            New Book
+          </p>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            Investing in Gold
+          </h2>
+          <p className="mt-4 text-lg leading-relaxed text-gray-600 max-w-2xl mx-auto">
+            Why the first restoration matters — and how gold changes the equation for patients, dentists, and the future of caries treatment.
+          </p>
+          <Link
+            to="/book"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-amber-500 px-6 py-3 font-semibold text-white shadow-md transition-all hover:bg-amber-600"
+          >
+            Read Free Online
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
+              <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
+            </svg>
+          </Link>
         </div>
       </section>
 
@@ -280,7 +279,7 @@ function Home() {
               Are you a dentist who offers gold work?
             </h2>
             <p className="mt-4 text-lg text-gray-600">
-              List your practice on GoldMatch and connect with patients actively
+              List your practice on Gold Dentistry Network and connect with patients actively
               seeking the gold restorations you provide.
             </p>
           </div>
@@ -335,7 +334,7 @@ function Home() {
       <footer className="border-t border-gray-200 bg-white py-12">
         <div className="mx-auto max-w-7xl px-6 text-center">
           <p className="text-sm text-gray-500">
-            &copy; {new Date().getFullYear()} GoldMatch. All rights reserved.
+            &copy; {new Date().getFullYear()} Gold Dentistry Network. All rights reserved.
           </p>
         </div>
       </footer>
