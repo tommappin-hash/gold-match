@@ -52,7 +52,7 @@ async function main() {
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Investing in Gold</title>
+<title>Caries: The Mother Wound of Restorative Dentistry</title>
 <style>
   @page {
     margin: 1in 0.85in;
