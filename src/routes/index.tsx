@@ -1,10 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { getDentistsByState, type StateCount } from "./api/dentists";
 
 export const Route = createFileRoute("/")({
+  loader: () => getDentistsByState(),
   component: Home,
 });
 
 function Home() {
+  const stateCounts = Route.useLoaderData();
+  const totalMembers = stateCounts.reduce((sum, s) => sum + s.count, 0);
   const navigate = useNavigate();
 
   const handleQuickSearch = (e: React.FormEvent) => {
@@ -14,6 +18,39 @@ function Home() {
 
   return (
     <div className="min-h-dvh">
+      {/* Members by State — compact strip */}
+      <section className="border-b border-amber-100 bg-white py-4 sm:py-5">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs font-medium text-gray-500">
+              <span className="flex h-1.5 w-1.5 rounded-full bg-amber-500" />
+              <span className="font-semibold text-amber-700">{totalMembers} members</span>
+              <span>across {stateCounts.length} states</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {stateCounts.map((sc: StateCount) => (
+                <Link
+                  key={sc.state}
+                  to="/dentists"
+                  className="inline-flex items-center gap-1 rounded-lg border border-amber-100 bg-amber-50/50 px-2 py-1 text-xs font-medium text-gray-600 transition-all hover:border-amber-300 hover:bg-amber-100 hover:text-amber-800"
+                >
+                  {sc.state}
+                  <span className="flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-amber-200 px-1 text-[10px] font-bold text-amber-700">
+                    {sc.count}
+                  </span>
+                </Link>
+              ))}
+              <Link
+                to="/dentists"
+                className="ml-1 text-xs font-medium text-amber-600 hover:text-amber-700"
+              >
+                Browse all →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-white to-amber-100/50">
         <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:py-40">
