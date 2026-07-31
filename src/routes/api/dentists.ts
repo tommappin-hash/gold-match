@@ -83,3 +83,38 @@ export const getDentistById = createServerFn()
     // Fallback to mock data
     return sampleDentists.find((d) => d.id === id) || null;
   });
+
+export type StateCount = { state: string; count: number };
+
+/**
+ * Server function to fetch dentist counts grouped by state.
+ * Falls back to sampleDentists mock data when DATABASE_URL is not set.
+ */
+export const getDentistsByState = createServerFn().handler(async (): Promise<StateCount[]> => {
+  if (process.env.DATABASE_URL) {
+    try {
+      const { sql } = await import("~/db");
+      const rows = await sql()`
+        SELECT state, COUNT(*)::int as count
+        FROM dentists
+        WHERE listing_status = 'active'
+        GROUP BY state
+        ORDER BY count DESC, state
+      `;
+      return rows.map((r: any) => ({
+        state: r.state,
+        count: r.count,
+      }));
+    } catch (err) {
+      console.error("DB query failed, falling back to mock data:", err);
+    }
+  }
+  // Fallback to mock data
+  const counts: Record<string, number> = {};
+  for (const d of sampleDentists) {
+    counts[d.state] = (counts[d.state] || 0) + 1;
+  }
+  return Object.entries(counts)
+    .map(([state, count]) => ({ state, count }))
+    .sort((a, b) => b.count - a.count || a.state.localeCompare(b.state));
+});
