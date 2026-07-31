@@ -116,41 +116,24 @@ function Directory() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((dentist) => (
+        <div className="mt-6 divide-y divide-gray-100 rounded-xl border border-gray-200 bg-white">
+          {filtered.length === 0 ? null : filtered.map((dentist) => (
             <Link
               key={dentist.id}
               to="/dentists/$id"
               params={{ id: dentist.id }}
-              className="group rounded-2xl bg-white p-6 shadow-sm border border-gray-200 transition-all hover:border-amber-200 hover:shadow-md"
+              className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-3 transition-colors hover:bg-amber-50/50"
             >
-              <h2 className="text-lg font-semibold text-gray-900 group-hover:text-amber-600 transition-colors">
-                {dentist.practiceName}
-              </h2>
-              <p className="mt-1 text-sm text-gray-500">
-                {dentist.city}, {dentist.state} {dentist.zipCode}
-              </p>
-              <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-gray-600">
-                {dentist.bio}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {dentist.services.slice(0, 3).map((s) => (
-                  <span
-                    key={s}
-                    className="rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700"
-                  >
-                    {formatServiceLabel(s)}
-                  </span>
-                ))}
-                {dentist.services.length > 3 && (
-                  <span className="rounded-full bg-gray-50 px-2.5 py-0.5 text-xs font-medium text-gray-500">
-                    +{dentist.services.length - 3} more
-                  </span>
-                )}
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="font-medium text-gray-900 truncate">
+                  {dentist.practiceName}
+                </span>
+                <span className="text-sm text-gray-400 shrink-0">
+                  {dentist.city}, {dentist.state}
+                </span>
               </div>
-              <div className="mt-4 flex items-center justify-between">
-                <span className="text-sm text-gray-400">{dentist.phone}</span>
-                <span className="text-sm font-medium text-amber-600 group-hover:underline">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-amber-600 shrink-0">
                   View Profile →
                 </span>
               </div>
