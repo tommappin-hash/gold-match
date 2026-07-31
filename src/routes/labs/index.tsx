@@ -7,7 +7,7 @@ const SERVICE_LABELS: Record<string, string> = {
   crowns: "Crowns", bridges: "Bridges", inlays: "Inlays", onlays: "Onlays",
 };
 
-const isStrategyMillingHQ = (lab: Lab) => lab.email === "partner@strategymilling.com";
+const isSample = (lab: Lab) => ["Precision Gold Lab", "Bay Area Gold Works", "Lone Star Dental Gold", "Heritage Gold Studio"].includes(lab.labName);
 
 export const Route = createFileRoute("/labs/")({
   component: LabsDirectory,
@@ -28,17 +28,13 @@ function LabsDirectory() {
     return matchesSearch && matchesService;
   });
 
-  const SMBadge = () => (
-    <img src="/sm-logo.png" alt="Strategy Milling" className="h-4 w-auto" />
-  );
-
   return (
     <div className="min-h-dvh bg-gray-50">
       <div className="mx-auto max-w-5xl px-6 py-16">
         <div className="text-center">
           <p className="text-sm font-medium uppercase tracking-widest text-amber-600">For Dentists</p>
           <h1 className="mt-2 text-3xl font-bold text-gray-900">Find a Gold Lab</h1>
-          <p className="mt-3 text-gray-600">Connect with dental labs that specialize in gold restorations — including Strategy Milling partners.</p>
+          <p className="mt-3 text-gray-600">Connect with dental labs that specialize in gold restorations.</p>
         </div>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -55,23 +51,16 @@ function LabsDirectory() {
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">{selectedLab.labName}</h2>
-                {selectedLab.strategyMillingPartner && <div className="mt-2"><SMBadge /></div>}
-                {!isStrategyMillingHQ(selectedLab) && (
-                  <p className="mt-1 text-gray-500">{[selectedLab.city, selectedLab.state, selectedLab.zipCode].filter(Boolean).join(", ")}</p>
-                )}
+                <p className="mt-1 text-gray-500">{[selectedLab.city, selectedLab.state, selectedLab.zipCode].filter(Boolean).join(", ")}</p>
               </div>
             </div>
-            {!isStrategyMillingHQ(selectedLab) && (
-              <div className="mt-4 flex flex-wrap gap-1.5">
-                {selectedLab.services.map((s) => (
-                  <span key={s} className="rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700">{SERVICE_LABELS[s] || s}</span>
-                ))}
-              </div>
-            )}
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {selectedLab.services.map((s) => (
+                <span key={s} className="rounded-full bg-amber-50 px-3 py-1 text-sm text-amber-700">{SERVICE_LABELS[s] || s}</span>
+              ))}
+            </div>
             {selectedLab.acceptingNewDentists && (
-              <p className="mt-3 text-sm font-medium text-green-600">
-                ● {isStrategyMillingHQ(selectedLab) ? "Currently accepting new labs" : "Currently accepting new dentists"}
-              </p>
+              <p className="mt-3 text-sm font-medium text-green-600">● Currently accepting new dentists</p>
             )}
             {selectedLab.bio && (
               <div className="mt-6 border-t pt-6">
@@ -90,29 +79,26 @@ function LabsDirectory() {
           </div>
         )}
 
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((lab) => {
-            const isHQ = isStrategyMillingHQ(lab);
-            return (
-              <div key={lab.id} onClick={() => setSelectedLab(lab)} className="cursor-pointer group rounded-2xl bg-white p-6 shadow-sm border border-gray-200 hover:border-amber-300 hover:shadow-md transition-all">
-                <div className="mb-3">
-                  <h2 className="font-semibold text-gray-900 group-hover:text-amber-600">{lab.labName}</h2>
-                  {lab.strategyMillingPartner && <div className="mt-1"><SMBadge /></div>}
-                </div>
-                {!isHQ && <p className="text-sm text-gray-500">{[lab.city, lab.state].filter(Boolean).join(", ")}</p>}
-                {!isHQ && (
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {lab.services.map((s) => (
-                      <span key={s} className="rounded-full bg-amber-50 px-2 py-0.5 text-xs text-amber-700">{SERVICE_LABELS[s] || s}</span>
-                    ))}
-                  </div>
-                )}
-                {!isHQ && lab.acceptingNewDentists && (
-                  <p className="mt-3 text-xs font-medium text-green-600">● Accepting New Dentists</p>
-                )}
+        <div className="mt-6 divide-y divide-gray-100 rounded-xl border border-gray-200 bg-white">
+          {filtered.length === 0 ? null : filtered.map((lab) => (
+            <div
+              key={lab.id}
+              onClick={() => setSelectedLab(lab)}
+              className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-3 cursor-pointer transition-colors hover:bg-amber-50/50"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="font-medium text-gray-900 truncate">
+                  {lab.labName}
+                </span>
+                <span className="text-sm text-gray-400 shrink-0">
+                  {[lab.city, lab.state].filter(Boolean).join(", ")}
+                </span>
               </div>
-            );
-          })}
+              <span className="text-sm font-medium text-amber-600 shrink-0">
+                View Details →
+              </span>
+            </div>
+          ))}
         </div>
 
         {filtered.length === 0 && (
