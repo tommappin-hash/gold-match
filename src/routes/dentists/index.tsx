@@ -7,9 +7,13 @@ import {
   formatServiceLabel,
 } from "~/data/dentists";
 import { getDentists } from "~/routes/api/dentists";
+import { trackPageView } from "../api/analytics";
 
 export const Route = createFileRoute("/dentists/")({
-  loader: () => getDentists(),
+  loader: () => {
+    trackPageView({ data: { path: "/dentists" } }).catch(() => {});
+    return getDentists();
+  },
   component: Directory,
 });
 

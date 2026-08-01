@@ -60,3 +60,25 @@ export const getLabById = createServerFn()
       return null;
     }
   });
+
+export const createLab = createServerFn()
+  .validator((data: {
+    labName: string;
+    email: string;
+    phone: string;
+    website: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    bio: string;
+    services: string[];
+  }) => data)
+  .handler(async ({ data }) => {
+    const db = sql();
+    const result = await db`
+      INSERT INTO labs (lab_name, email, phone, website, city, state, zip_code, bio, services, accepting_new_dentists, strategy_milling_partner, listing_status)
+      VALUES (${data.labName}, ${data.email}, ${data.phone}, ${data.website || null}, ${data.city}, ${data.state}, ${data.zipCode}, ${data.bio}, ${data.services}, true, false, 'pending')
+      RETURNING id, lab_name, email, phone, website, city, state, zip_code, bio, services
+    `;
+    return { success: true, submission: result[0] };
+  });

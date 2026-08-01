@@ -12,7 +12,7 @@ export const getDentists = createServerFn().handler(async () => {
       const rows = await sql()`
         SELECT id, practice_name, email, phone, website,
                address_line1, city, state, zip_code, latitude, longitude,
-               bio, services, photos
+               bio, services, photos, listing_status, payment_status
         FROM dentists
         WHERE listing_status = 'active'
         ORDER BY practice_name
@@ -32,6 +32,8 @@ export const getDentists = createServerFn().handler(async () => {
         bio: r.bio,
         services: (r.services || []) as Service[],
         photos: (r.photos || []) as { url: string; caption: string }[],
+        listingStatus: r.listing_status,
+        paymentStatus: r.payment_status,
       }));
     } catch (err) {
       console.error("DB query failed, falling back to mock data:", err);
@@ -54,7 +56,7 @@ export const getDentistById = createServerFn()
         const rows = await sql()`
           SELECT id, practice_name, email, phone, website,
                  address_line1, city, state, zip_code, latitude, longitude,
-                 bio, services, photos
+                 bio, services, photos, listing_status, payment_status
           FROM dentists
           WHERE id = ${id}
         `;
@@ -75,6 +77,8 @@ export const getDentistById = createServerFn()
           bio: r.bio,
           services: (r.services || []) as Service[],
           photos: (r.photos || []) as { url: string; caption: string }[],
+          listingStatus: r.listing_status,
+          paymentStatus: r.payment_status,
         } as Dentist;
       } catch (err) {
         console.error("DB query failed, falling back to mock data:", err);
@@ -88,7 +92,7 @@ export type StateCount = { state: string; count: number };
 
 /**
  * Server function to fetch dentist counts grouped by state.
- * Falls back to sampleDentists mock data when DATABASE_URL is not set.
+ * Returns empty array when DATABASE_URL is not set — never shows mock data publicly.
  */
 export const getDentistsByState = createServerFn().handler(async (): Promise<StateCount[]> => {
   if (process.env.DATABASE_URL) {
@@ -106,15 +110,9 @@ export const getDentistsByState = createServerFn().handler(async (): Promise<Sta
         count: r.count,
       }));
     } catch (err) {
-      console.error("DB query failed, falling back to mock data:", err);
+      console.error("DB query failed:", err);
     }
   }
-  // Fallback to mock data
-  const counts: Record<string, number> = {};
-  for (const d of sampleDentists) {
-    counts[d.state] = (counts[d.state] || 0) + 1;
-  }
-  return Object.entries(counts)
-    .map(([state, count]) => ({ state, count }))
-    .sort((a, b) => b.count - a.count || a.state.localeCompare(b.state));
+  // Return empty — never show mock data on the public homepage
+  return [];
 });

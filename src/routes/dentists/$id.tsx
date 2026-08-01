@@ -2,13 +2,15 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { type FormEvent, useState } from "react";
 import { formatServiceLabel, sampleDentists } from "~/data/dentists";
 import { submitConnection } from "~/routes/api/connections";
+import { trackPageView } from "~/routes/api/analytics";
 
 export const Route = createFileRoute("/dentists/$id")({
   loader: async ({ params }) => {
+    trackPageView({ data: { path: `/dentists/${params.id}` } }).catch(() => {});
     // Try the server function first, fall back to mock data
     try {
       const { getDentistById } = await import("~/routes/api/dentists");
-      const dentist = await getDentistById(params.id);
+      const dentist = await getDentistById({ data: params.id });
       if (dentist) return dentist;
     } catch (err) {
       console.error("getDentistById failed:", err);
@@ -35,11 +37,12 @@ function DentistProfile() {
     setError("");
     setSending(true);
     try {
-      await submitConnection({
+      await submitConnection({ data: {
         dentistId: dentist.id,
         patientName: name,
         patientEmail: email,
         message,
+      },
       });
       setConnectionSent(true);
     } catch (err: any) {

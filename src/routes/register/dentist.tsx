@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { type FormEvent, useState } from "react";
 import { ALL_SERVICES, type Service, formatServiceLabel } from "~/data/dentists";
 import { createCheckoutSession } from "~/routes/api/create-checkout";
+import { saveDentistRegistration } from "~/routes/api/save-registration";
 
 export const Route = createFileRoute("/register/dentist")({
   component: DentistRegister,
@@ -96,6 +97,38 @@ function DentistRegister() {
 
   const handleBack = () => setStep((s) => Math.max(s - 1, 0));
 
+  const saveAndRedirect = async (stripeUrl: string) => {
+    setSubmitting(true);
+    try {
+      // Save registration to DB first
+      const saveResult = await saveDentistRegistration({
+        practiceName: form.practiceName,
+        email: form.email,
+        phone: form.phone,
+        website: form.website,
+        addressLine1: form.addressLine1,
+        addressLine2: form.addressLine2,
+        city: form.city,
+        state: form.state,
+        zipCode: form.zipCode,
+        bio: form.bio,
+        services: form.services,
+      });
+      if (!saveResult.success) {
+        setErrors({ practiceName: saveResult.error as any } as any);
+        setSubmitting(false);
+        return;
+      }
+      // Redirect to Stripe (append dentistId for password setup flow)
+      const url = new URL(stripeUrl, window.location.origin);
+      url.searchParams.set("dentist_id", saveResult.dentistId);
+      window.location.href = url.toString();
+    } catch (err: any) {
+      setSubmitting(false);
+      setErrors({ practiceName: err.message || "Failed to save registration." } as any);
+    }
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const validationErrors = validateStep(step);
@@ -103,21 +136,7 @@ function DentistRegister() {
       setErrors(validationErrors);
       return;
     }
-
-    setSubmitting(true);
-    try {
-      const result = await createCheckoutSession({
-        practiceName: form.practiceName,
-        practiceEmail: form.email,
-      });
-      // Redirect to Stripe Checkout (or mock success page)
-      if (result.url) {
-        window.location.href = result.url;
-      }
-    } catch (err: any) {
-      setSubmitting(false);
-      setErrors({ practiceName: err.message || "Payment failed. Please try again." } as any);
-    }
+    // For the form submit on step 3, just trigger save via the link
   };
 
 
@@ -131,6 +150,9 @@ function DentistRegister() {
           <p className="mt-3 text-gray-600">
             Join Gold Dentistry Network and connect with patients looking for gold
             restorations. One-time fee — no commissions.
+          </p>
+          <p className="mt-2 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2">
+            🦷 <strong>Easy Gold Crowns</strong> will be advertising in your area to drive patients to your listing.
           </p>
 
           {/* Step indicators */}
@@ -419,14 +441,14 @@ function DentistRegister() {
                     Click the button below to complete your payment securely via
                     Stripe. You'll be redirected to Stripe's checkout page.
                   </p>
-                  <a
-                    href={stripeLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-2 rounded-xl bg-amber-500 px-8 py-3 text-lg font-semibold text-white shadow-md transition-all hover:bg-amber-600"
+                  <button
+                    type="button"
+                    onClick={() => saveAndRedirect(stripeLink)}
+                    disabled={submitting}
+                    className="mt-4 inline-flex items-center gap-2 rounded-xl bg-amber-500 px-8 py-3 text-lg font-semibold text-white shadow-md transition-all hover:bg-amber-600 disabled:opacity-50"
                   >
-                    Pay {price} with Stripe →
-                  </a>
+                    {submitting ? "Saving..." : `Pay ${price} with Stripe →`}
+                  </button>
                   <p className="mt-3 text-xs text-gray-400">
                     After payment, you'll be redirected back to confirm your
                     listing.

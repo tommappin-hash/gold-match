@@ -1,8 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { getBookContent, type TocEntry } from "./api/book";
+import { getBookContent, trackBookView, type TocEntry } from "./api/book";
+import { trackPageView } from "./api/analytics";
 
 export const Route = createFileRoute("/book")({
-  loader: () => getBookContent(),
+  loader: async () => {
+    trackPageView({ data: { path: "/book" } }).catch(() => {});
+    trackBookView({ data: { path: "/book" } }).catch(() => {});
+    return getBookContent();
+  },
   component: BookPage,
 });
 
@@ -27,6 +32,7 @@ function BookPage() {
           <a
             href="/book.pdf"
             download
+            onClick={() => { trackBookView({ data: { path: "/book.pdf" } }).catch(() => {}); }}
             className="mt-8 inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-base font-semibold text-amber-700 shadow-lg transition-all hover:bg-amber-50"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">

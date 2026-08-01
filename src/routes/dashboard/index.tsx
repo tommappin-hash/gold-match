@@ -1,33 +1,95 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { createServerFn } from "@tanstack/react-start";
+import { sql as getDb } from "../../db";
 import { checkSessionFn, logoutFn } from "../../lib/auth";
 
+// ── Server function: get dashboard stats ──
+const getDashboardStatsFn = createServerFn()
+  .validator((data: { cookieHeader?: string }) => data)
+  .handler(async ({ data, context }: any) => {
+    const cookieHeader =
+      data.cookieHeader ||
+      context?.request?.headers?.get?.("cookie") ||
+      context?.req?.headers?.get?.("cookie") ||
+      "";
+    const cookies = cookieHeader.split(";").map((c: string) => c.trim());
+    let session: { accountId: string; token: string } | null = null;
+    for (const c of cookies) {
+      const [name, ...rest] = c.split("=");
+      if (name === "gdn_session") {
+        const value = rest.join("=");
+        const [id, tok] = value.split(":");
+        if (id && tok) session = { accountId: id, token: tok };
+        break;
+      }
+    }
+    if (!session) return { connectionCount: 0, profileComplete: 0, isLab: false };
+
+    const db = getDb();
+
+    // Check dentists first
+    let rows = await db`SELECT * FROM dentists WHERE id = ${session.accountId}::uuid AND session_token = ${session.token}`;
+    if (rows.length > 0) {
+      const r = rows[0];
+      const connResult = await db`SELECT COUNT(*)::int FROM connections WHERE dentist_id = ${session.accountId}::uuid`;
+      const count = connResult[0]?.count || 0;
+      const complete = computeCompleteness(r, false);
+      return { connectionCount: count, profileComplete: complete, isLab: false };
+    }
+
+    // Check labs
+    rows = await db`SELECT * FROM labs WHERE id = ${session.accountId}::uuid AND session_token = ${session.token}`;
+    if (rows.length > 0) {
+      const r = rows[0];
+      const complete = computeCompleteness(r, true);
+      return { connectionCount: 0, profileComplete: complete, isLab: true };
+    }
+
+    return { connectionCount: 0, profileComplete: 0, isLab: false };
+  });
+
+function computeCompleteness(row: any, isLab: boolean): number {
+  const nameKey = isLab ? "lab_name" : "practice_name";
+  const fields = [
+    row[nameKey],
+    row.bio,
+    row.services,
+    row.phone,
+    row.city,
+    row.state,
+  ];
+  const filled = fields.filter((f) => {
+    if (Array.isArray(f)) return f.length > 0;
+    return !!f;
+  }).length;
+  return Math.round((filled / fields.length) * 100);
+}
+
+// ── Page ──
 export const Route = createFileRoute("/dashboard/")({
   component: DashboardIndex,
 });
 
 function DashboardIndex() {
-  const navigate = useNavigate();
-  const [account, setAccount] = useState<{
-    id: string;
-    email: string;
-    name: string;
-    accountType: string;
-  } | null>(null);
-  const [checking, setChecking] = useState(true);
+  const [session, setSession] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({ connectionCount: 0, profileComplete: 0, isLab: false });
 
   useEffect(() => {
-    checkSessionFn({ data: { cookieHeader: document.cookie } })
-      .then((session) => {
-        if (!session.authenticated) {
-          navigate({ to: "/login" });
-        } else {
-          setAccount(session.account || null);
-        }
-      })
-      .catch(() => navigate({ to: "/login" }))
-      .finally(() => setChecking(false));
+    checkSessionFn({ data: { cookieHeader: document.cookie } }).then((s) => {
+      if (!s.authenticated) window.location.href = "/login";
+      else {
+        setSession(s);
+        setLoading(false);
+      }
+    });
   }, []);
+
+  useEffect(() => {
+    if (loading) return;
+    getDashboardStatsFn({ data: { cookieHeader: document.cookie } }).then(setStats);
+  }, [loading]);
 
   async function handleLogout() {
     const result = await logoutFn();
@@ -37,7 +99,7 @@ function DashboardIndex() {
     window.location.href = "/";
   }
 
-  if (checking) {
+  if (loading) {
     return (
       <div className="min-h-dvh bg-gray-50 flex items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-200 border-t-amber-500" />
@@ -45,7 +107,7 @@ function DashboardIndex() {
     );
   }
 
-  if (!account) return null;
+  const account = session?.account;
 
   return (
     <div className="min-h-dvh bg-gray-50">
@@ -54,7 +116,7 @@ function DashboardIndex() {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
             <p className="mt-2 text-gray-600">
-              Welcome back, {account.name || "Doctor"}. Manage your {account.accountType === "lab" ? "lab" : "practice"}{" "}
+              Welcome back, {account?.name || "Doctor"}. Manage your {account?.accountType === "lab" ? "lab" : "practice"}{" "}
               listing and view incoming patient connections.
             </p>
           </div>
@@ -66,7 +128,30 @@ function DashboardIndex() {
           </button>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2">
+        {/* ── Summary Stats ── */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          {!stats.isLab && (
+            <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-200">
+              <p className="text-sm font-medium text-gray-500">Connection Requests</p>
+              <p className="mt-1 text-3xl font-bold text-gray-900">{stats.connectionCount}</p>
+            </div>
+          )}
+          <div className="rounded-2xl bg-white p-6 shadow-sm border border-gray-200">
+            <p className="text-sm font-medium text-gray-500">Profile Completeness</p>
+            <div className="mt-2 flex items-center gap-3">
+              <div className="flex-1 h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-amber-500 rounded-full transition-all"
+                  style={{ width: `${stats.profileComplete}%` }}
+                />
+              </div>
+              <span className="text-sm font-semibold text-gray-700">{stats.profileComplete}%</span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Quick Links ── */}
+        <div className="mt-8 grid gap-6 sm:grid-cols-2">
           <Link
             to="/dashboard/connections"
             className="group rounded-2xl bg-white p-8 shadow-sm border border-gray-200 hover:border-amber-300 hover:shadow-md transition-all"
@@ -101,7 +186,7 @@ function DashboardIndex() {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-gray-900 group-hover:text-amber-600 transition-colors">
-                  {account.accountType === "lab" ? "Lab" : "Practice"} Settings
+                  {account?.accountType === "lab" ? "Lab" : "Practice"} Settings
                 </h2>
                 <p className="mt-1 text-sm text-gray-500">Edit your profile, services, and listing details.</p>
               </div>
@@ -109,7 +194,7 @@ function DashboardIndex() {
           </Link>
 
           <a
-            href={account.accountType === "lab" ? `/labs/${account.id}` : `/dentists/${account.id}`}
+            href={account?.accountType === "lab" ? `/labs/${account?.id}` : `/dentists/${account?.id}`}
             className="group rounded-2xl bg-white p-8 shadow-sm border border-gray-200 hover:border-amber-300 hover:shadow-md transition-all"
           >
             <div className="flex items-center gap-4">

@@ -1,6 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { trackPageView } from "./api/analytics";
 
 export const Route = createFileRoute("/for-dentists")({
+  loader: () => {
+    trackPageView({ data: { path: "/for-dentists" } }).catch(() => {});
+  },
   component: ForDentists,
 });
 
