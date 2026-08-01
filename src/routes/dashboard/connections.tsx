@@ -1,17 +1,10 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { listConnections } from "~/routes/api/connections";
 import type { Connection } from "~/data/connections";
 import { checkSessionFn } from "../../lib/auth";
 
 export const Route = createFileRoute("/dashboard/connections")({
-  loader: async () => {
-    const session = await checkSessionFn();
-    if (!session.authenticated) {
-      throw redirect({ to: "/login" });
-    }
-    return { account: session.account };
-  },
   component: DashboardConnections,
 });
 
@@ -22,6 +15,8 @@ const STATUS_COLORS: Record<Connection["status"], string> = {
 };
 
 function DashboardConnections() {
+  const navigate = useNavigate();
+  const [checking, setChecking] = useState(true);
   const [connections, setConnections] = useState<
     (Connection & { practiceName?: string })[]
   >([]);
@@ -29,11 +24,31 @@ function DashboardConnections() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    checkSessionFn({ data: { cookieHeader: document.cookie } })
+      .then((session) => {
+        if (!session.authenticated) {
+          navigate({ to: "/login" });
+        }
+      })
+      .catch(() => navigate({ to: "/login" }))
+      .finally(() => setChecking(false));
+  }, []);
+
+  useEffect(() => {
+    if (checking) return;
     listConnections({})
       .then(setConnections)
       .catch((err) => setError(err.message || "Failed to load connections"))
       .finally(() => setLoading(false));
-  }, []);
+  }, [checking]);
+
+  if (checking) {
+    return (
+      <div className="min-h-dvh bg-gray-50 flex items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-200 border-t-amber-500" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-dvh bg-gray-50">
