@@ -3,11 +3,15 @@ import { useState } from "react";
 import { setPasswordFn } from "../../lib/auth";
 
 export const Route = createFileRoute("/register/success")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    dentistId: (search.dentist_id as string) || "",
+  }),
   component: RegistrationSuccess,
 });
 
 function RegistrationSuccess() {
   const navigate = useNavigate();
+  const { dentistId } = Route.useSearch();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
@@ -25,12 +29,21 @@ function RegistrationSuccess() {
       setError("Passwords do not match.");
       return;
     }
+    if (!dentistId) {
+      setError("Missing account ID. Please use the 'Set up your password' link on the login page with your email.");
+      return;
+    }
     setLoading(true);
     try {
-      // For MVP, we don't have the dentistId from the registration flow,
-      // so we redirect them to login where they'd use their email
-      // In production, the dentistId would come from the Stripe session
-      setDone(true);
+      const result = await setPasswordFn({
+        data: { accountId: dentistId, password, accountType: "dentist" },
+      });
+      if (result.success && result.cookie) {
+        document.cookie = result.cookie["Set-Cookie"];
+        setDone(true);
+      } else {
+        setError(result.error || "Failed to set password.");
+      }
     } catch {
       setError("An error occurred. Please try again.");
     } finally {
@@ -84,6 +97,19 @@ function RegistrationSuccess() {
               >
                 Go to Login →
               </Link>
+            </div>
+          ) : !dentistId ? (
+            <div className="mt-6 rounded-lg bg-amber-50 border border-amber-200 p-4 text-center">
+              <p className="text-sm font-medium text-amber-700">
+                No account ID found in the URL.
+              </p>
+              <p className="mt-1 text-xs text-amber-600">
+                Use the <strong>"Set up your password"</strong> link on the{" "}
+                <Link to="/login" className="underline font-medium text-amber-700 hover:text-amber-800">
+                  login page
+                </Link>{" "}
+                with your email address to create your password.
+              </p>
             </div>
           ) : (
             <form onSubmit={handleSetPassword} className="mt-4 space-y-4">

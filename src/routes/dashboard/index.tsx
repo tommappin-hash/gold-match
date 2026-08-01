@@ -7,13 +7,13 @@ export const Route = createFileRoute("/dashboard/")({
     if (!session.authenticated) {
       throw redirect({ to: "/login" });
     }
-    return { dentist: session.dentist };
+    return { account: session.account };
   },
   component: DashboardIndex,
 });
 
 function DashboardIndex() {
-  const { dentist } = Route.useLoaderData();
+  const { account } = Route.useLoaderData();
 
   async function handleLogout() {
     const result = await logoutFn();
@@ -30,7 +30,7 @@ function DashboardIndex() {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
             <p className="mt-2 text-gray-600">
-              Welcome back, {dentist?.practiceName || "Doctor"}. Manage your practice
+              Welcome back, {account?.name || "Doctor"}. Manage your {account?.accountType === "lab" ? "lab" : "practice"}
               listing and view incoming patient connections.
             </p>
           </div>

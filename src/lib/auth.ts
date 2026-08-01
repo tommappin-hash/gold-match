@@ -20,9 +20,9 @@ function generateSessionToken(): string {
 }
 
 /** Set session cookie via the response headers */
-function setSessionCookie(dentistId: string, token: string) {
+function setSessionCookie(accountId: string, token: string) {
   return {
-    "Set-Cookie": `${SESSION_COOKIE}=${dentistId}:${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${60 * 60 * 24 * 7}`,
+    "Set-Cookie": `${SESSION_COOKIE}=${accountId}:${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${60 * 60 * 24 * 7}`,
   };
 }
 
@@ -33,30 +33,39 @@ function clearSessionCookie() {
 }
 
 /** Parse session cookie from request headers */
-function getSessionFromCookies(cookieHeader: string): { dentistId: string; token: string } | null {
+function getSessionFromCookies(cookieHeader: string): { accountId: string; token: string } | null {
   const cookies = cookieHeader.split(";").map((c) => c.trim());
   for (const cookie of cookies) {
     const [name, ...rest] = cookie.split("=");
     if (name === SESSION_COOKIE) {
       const value = rest.join("=");
-      const [dentistId, token] = value.split(":");
-      if (dentistId && token) return { dentistId, token };
+      const [accountId, token] = value.split(":");
+      if (accountId && token) return { accountId, token };
     }
   }
   return null;
 }
 
-/** Lookup dentist by email only — returns dentistId regardless of password state */
-export const lookupDentistFn = createServerFn()
+/** Lookup an account (dentist or lab) by email — returns accountId regardless of password state */
+export const lookupAccountFn = createServerFn()
   .validator((data: { email: string }) => data)
   .handler(async ({ data }) => {
     const db = sql();
-    const rows = await db`SELECT id, email FROM dentists WHERE email = ${data.email}`;
-    if (rows.length === 0) {
-      return { found: false, error: "Account not found." };
+    // Check dentists first
+    let rows = await db`SELECT id, email FROM dentists WHERE email = ${data.email}`;
+    if (rows.length > 0) {
+      return { found: true, accountId: rows[0].id.toString(), email: rows[0].email, accountType: "dentist" };
     }
-    return { found: true, dentistId: rows[0].id.toString(), email: rows[0].email };
+    // Check labs
+    rows = await db`SELECT id, email FROM labs WHERE email = ${data.email}`;
+    if (rows.length > 0) {
+      return { found: true, accountId: rows[0].id.toString(), email: rows[0].email, accountType: "lab" };
+    }
+    return { found: false, error: "Account not found." };
   });
+
+/** @deprecated Use lookupAccountFn instead — kept for backward compatibility */
+export const lookupDentistFn = lookupAccountFn;
 
 /** Login: validate email + password, return session cookie */
 export const loginFn = createServerFn()
@@ -77,7 +86,7 @@ export const loginFn = createServerFn()
       }
       const account = rows[0];
       if (!account.password_hash || !account.password_salt) {
-        return { success: false, accountType, dentistId: account.id.toString(), error: "No password set for this account. Please complete registration." };
+        return { success: false, accountType, accountId: account.id.toString(), error: "No password set for this account. Please complete registration." };
       }
       const hash = hashPassword(data.password, account.password_salt);
       if (!timingSafeEqual(Buffer.from(hash), Buffer.from(account.password_hash))) {
@@ -90,7 +99,7 @@ export const loginFn = createServerFn()
         await db`UPDATE labs SET session_token = ${newToken} WHERE id = ${account.id}`;
       }
       const cookie = setSessionCookie(account.id.toString(), newToken);
-      return { success: true, accountType, dentistId: account.id.toString(), cookie };
+      return { success: true, accountType, accountId: account.id.toString(), cookie };
     } catch (err: any) {
       if (err.message?.includes("DATABASE_URL")) return { success: false, error: "Database not configured." };
       return { success: false, error: "Login failed." };
@@ -103,7 +112,7 @@ export const logoutFn = createServerFn().handler(async () => {
   return { success: true, cookie };
 });
 
-/** Check current session — used by protected routes */
+/** Check current session — used by protected routes. Checks both dentists and labs. */
 export const checkSessionFn = createServerFn().handler(async ({ context }: any) => {
   try {
     const cookieHeader = context?.req?.headers?.get?.("cookie") || "";
@@ -111,33 +120,72 @@ export const checkSessionFn = createServerFn().handler(async ({ context }: any) 
     if (!session) return { authenticated: false };
 
     const db = sql();
-    const rows = await db`SELECT id, email, practice_name FROM dentists WHERE id = ${session.dentistId}::uuid AND session_token = ${session.token}`;
-    if (rows.length === 0) return { authenticated: false };
 
-    return {
-      authenticated: true,
-      dentist: {
-        id: rows[0].id.toString(),
-        email: rows[0].email,
-        practiceName: rows[0].practice_name,
-      },
-    };
+    // Check dentists first
+    let rows = await db`SELECT id, email, practice_name FROM dentists WHERE id = ${session.accountId}::uuid AND session_token = ${session.token}`;
+    if (rows.length > 0) {
+      return {
+        authenticated: true,
+        accountType: "dentist",
+        dentist: {
+          id: rows[0].id.toString(),
+          email: rows[0].email,
+          practiceName: rows[0].practice_name,
+        },
+        account: {
+          id: rows[0].id.toString(),
+          email: rows[0].email,
+          name: rows[0].practice_name,
+          accountType: "dentist",
+        },
+      };
+    }
+
+    // Check labs
+    rows = await db`SELECT id, email, lab_name FROM labs WHERE id = ${session.accountId}::uuid AND session_token = ${session.token}`;
+    if (rows.length > 0) {
+      return {
+        authenticated: true,
+        accountType: "lab",
+        lab: {
+          id: rows[0].id.toString(),
+          email: rows[0].email,
+          labName: rows[0].lab_name,
+        },
+        account: {
+          id: rows[0].id.toString(),
+          email: rows[0].email,
+          name: rows[0].lab_name,
+          accountType: "lab",
+        },
+      };
+    }
+
+    return { authenticated: false };
   } catch {
     return { authenticated: false };
   }
 });
 
-/** Set password after registration (existing dentist, no password set yet) */
+/** Set password after registration (existing account, no password set yet).
+ *  Accepts optional accountType — defaults to "dentist" for backward compatibility. */
 export const setPasswordFn = createServerFn()
-  .validator((data: { dentistId: string; password: string }) => data)
+  .validator((data: { accountId: string; password: string; accountType?: string }) => data)
   .handler(async ({ data }) => {
     try {
       const db = sql();
       const salt = generateSalt();
       const hash = hashPassword(data.password, salt);
       const token = generateSessionToken();
-      await db`UPDATE dentists SET password_hash = ${hash}, password_salt = ${salt}, session_token = ${token} WHERE id = ${data.dentistId}::uuid`;
-      const cookie = setSessionCookie(data.dentistId, token);
+      const accountType = data.accountType || "dentist";
+      const accountId = data.accountId;
+
+      if (accountType === "lab") {
+        await db`UPDATE labs SET password_hash = ${hash}, password_salt = ${salt}, session_token = ${token} WHERE id = ${accountId}::uuid`;
+      } else {
+        await db`UPDATE dentists SET password_hash = ${hash}, password_salt = ${salt}, session_token = ${token} WHERE id = ${accountId}::uuid`;
+      }
+      const cookie = setSessionCookie(accountId, token);
       return { success: true, cookie };
     } catch (err: any) {
       console.error("setPasswordFn error:", err.message || err);
@@ -145,5 +193,57 @@ export const setPasswordFn = createServerFn()
         return { success: false, error: "Database not configured." };
       }
       return { success: false, error: err.message || "Failed to set password." };
+    }
+  });
+
+/** Change password for an authenticated account (dentist or lab).
+ *  Validates old password before updating. */
+export const changePasswordFn = createServerFn()
+  .validator((data: { accountId: string; accountType: string; oldPassword: string; newPassword: string }) => data)
+  .handler(async ({ data }) => {
+    try {
+      const db = sql();
+
+      // Lookup current credentials from the appropriate table
+      let rows;
+      if (data.accountType === "lab") {
+        rows = await db`SELECT id, password_hash, password_salt FROM labs WHERE id = ${data.accountId}::uuid`;
+      } else {
+        rows = await db`SELECT id, password_hash, password_salt FROM dentists WHERE id = ${data.accountId}::uuid`;
+      }
+      if (rows.length === 0) {
+        return { success: false, error: "Account not found." };
+      }
+      const account = rows[0];
+
+      if (!account.password_hash || !account.password_salt) {
+        return { success: false, error: "No password set for this account." };
+      }
+
+      // Verify old password
+      const oldHash = hashPassword(data.oldPassword, account.password_salt);
+      if (!timingSafeEqual(Buffer.from(oldHash), Buffer.from(account.password_hash))) {
+        return { success: false, error: "Current password is incorrect." };
+      }
+
+      // Set new password
+      const salt = generateSalt();
+      const hash = hashPassword(data.newPassword, salt);
+      const token = generateSessionToken();
+
+      if (data.accountType === "lab") {
+        await db`UPDATE labs SET password_hash = ${hash}, password_salt = ${salt}, session_token = ${token} WHERE id = ${data.accountId}::uuid`;
+      } else {
+        await db`UPDATE dentists SET password_hash = ${hash}, password_salt = ${salt}, session_token = ${token} WHERE id = ${data.accountId}::uuid`;
+      }
+
+      const cookie = setSessionCookie(data.accountId, token);
+      return { success: true, cookie };
+    } catch (err: any) {
+      console.error("changePasswordFn error:", err.message || err);
+      if (err.message?.includes("DATABASE_URL")) {
+        return { success: false, error: "Database not configured." };
+      }
+      return { success: false, error: err.message || "Failed to change password." };
     }
   });

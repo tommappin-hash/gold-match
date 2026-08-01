@@ -10,7 +10,7 @@ export const Route = createFileRoute("/dashboard/connections")({
     if (!session.authenticated) {
       throw redirect({ to: "/login" });
     }
-    return { dentist: session.dentist };
+    return { account: session.account };
   },
   component: DashboardConnections,
 });
