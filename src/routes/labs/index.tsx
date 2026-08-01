@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { getLabs, type Lab } from "../api/labs";
+import { trackPageView } from "../api/analytics";
 
 const ALL_SERVICES = ["crowns", "bridges", "inlays", "onlays"] as const;
 const SERVICE_LABELS: Record<string, string> = {
@@ -10,6 +11,9 @@ const SERVICE_LABELS: Record<string, string> = {
 const isSample = (lab: Lab) => ["Precision Gold Lab", "Bay Area Gold Works", "Lone Star Dental Gold", "Heritage Gold Studio"].includes(lab.labName);
 
 export const Route = createFileRoute("/labs/")({
+  loader: () => {
+    trackPageView({ data: { path: "/labs" } }).catch(() => {});
+  },
   component: LabsDirectory,
 });
 

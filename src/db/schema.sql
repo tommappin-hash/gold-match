@@ -139,3 +139,13 @@ END $;
 ALTER TABLE dentists ADD COLUMN IF NOT EXISTS password_hash TEXT;
 ALTER TABLE dentists ADD COLUMN IF NOT EXISTS password_salt TEXT;
 ALTER TABLE dentists ADD COLUMN IF NOT EXISTS session_token TEXT;
+
+-- ============================================================================
+-- Page Views (light analytics)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS page_views (
+    path  TEXT PRIMARY KEY,
+    count INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);

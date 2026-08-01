@@ -1,13 +1,16 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import { useState } from "react";
 import { setPasswordFn } from "../../lib/auth";
 
 export const Route = createFileRoute("/register/success")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    dentistId: (search.dentist_id as string) || "",
+  }),
   component: RegistrationSuccess,
 });
 
 function RegistrationSuccess() {
-  const navigate = useNavigate();
+  const { dentistId } = useSearch({ from: "/register/success" });
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
@@ -17,6 +20,10 @@ function RegistrationSuccess() {
   async function handleSetPassword(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    if (!dentistId) {
+      setError("Missing account ID. Please use the 'Set up your password' link on the login page.");
+      return;
+    }
     if (password.length < 6) {
       setError("Password must be at least 6 characters.");
       return;
@@ -27,10 +34,15 @@ function RegistrationSuccess() {
     }
     setLoading(true);
     try {
-      // For MVP, we don't have the dentistId from the registration flow,
-      // so we redirect them to login where they'd use their email
-      // In production, the dentistId would come from the Stripe session
-      setDone(true);
+      const result = await setPasswordFn({ data: { dentistId, password } });
+      if (result.success) {
+        if (result.cookie) {
+          document.cookie = result.cookie;
+        }
+        setDone(true);
+      } else {
+        setError(result.error || "Failed to set password.");
+      }
     } catch {
       setError("An error occurred. Please try again.");
     } finally {
