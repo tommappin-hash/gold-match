@@ -1,14 +1,17 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { getDentistsByState, type StateCount } from "./api/dentists";
+import { trackPageView } from "./api/analytics";
 
 export const Route = createFileRoute("/")({
-  loader: () => getDentistsByState(),
+  loader: () => {
+    trackPageView({ data: { path: "/" } }).catch(() => {});
+    return getDentistsByState();
+  },
   component: Home,
 });
 
 function Home() {
   const stateCounts = Route.useLoaderData();
-  const totalMembers = stateCounts.reduce((sum, s) => sum + s.count, 0);
   const navigate = useNavigate();
 
   const handleQuickSearch = (e: React.FormEvent) => {
@@ -19,34 +22,27 @@ function Home() {
   return (
     <div className="min-h-dvh">
       {/* Members by State — compact strip */}
-      <section className="border-b border-amber-100 bg-white py-4 sm:py-5">
+      <section className="border-b border-amber-100 bg-white py-3 sm:py-4">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-xs font-medium text-gray-500">
-              <span className="flex h-1.5 w-1.5 rounded-full bg-amber-500" />
-              <span className="font-semibold text-amber-700">{totalMembers} members</span>
-              <span>across {stateCounts.length} states</span>
-            </div>
-            <div className="flex flex-wrap items-center gap-1.5">
-              {stateCounts.map((sc: StateCount) => (
-                <Link
-                  key={sc.state}
-                  to="/dentists"
-                  className="inline-flex items-center gap-1 rounded-lg border border-amber-100 bg-amber-50/50 px-2 py-1 text-xs font-medium text-gray-600 transition-all hover:border-amber-300 hover:bg-amber-100 hover:text-amber-800"
-                >
-                  {sc.state}
-                  <span className="flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-amber-200 px-1 text-[10px] font-bold text-amber-700">
-                    {sc.count}
-                  </span>
-                </Link>
-              ))}
+          <div className="flex flex-wrap items-center justify-center gap-1.5">
+            {stateCounts.map((sc: StateCount) => (
               <Link
+                key={sc.state}
                 to="/dentists"
-                className="ml-1 text-xs font-medium text-amber-600 hover:text-amber-700"
+                className="inline-flex items-center gap-1 rounded-lg border border-amber-100 bg-amber-50/50 px-2 py-1 text-xs font-medium text-gray-600 transition-all hover:border-amber-300 hover:bg-amber-100 hover:text-amber-800"
               >
-                Browse all →
+                {sc.state}
+                <span className="flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-amber-200 px-1 text-[10px] font-bold text-amber-700">
+                  {sc.count}
+                </span>
               </Link>
-            </div>
+            ))}
+            <Link
+              to="/dentists"
+              className="ml-1 text-xs font-medium text-amber-600 hover:text-amber-700"
+            >
+              Browse all →
+            </Link>
           </div>
         </div>
       </section>
@@ -184,47 +180,6 @@ function Home() {
                 <p className="mt-2 text-gray-600">{item.desc}</p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Members by State */}
-      <section className="bg-amber-50/50 py-16 sm:py-20">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-sm font-medium uppercase tracking-widest text-amber-600">
-              Growing Nationwide
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              {totalMembers} members across {stateCounts.length} states
-            </h2>
-            <p className="mt-3 text-base text-gray-600">
-              Gold Dentistry Network members span the country. Find a gold specialist near you — or browse by state.
-            </p>
-          </div>
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-            {stateCounts.map((sc: StateCount) => (
-              <Link
-                key={sc.state}
-                to="/dentists"
-                className="group flex items-center justify-between rounded-xl border border-amber-200 bg-white px-4 py-3 shadow-sm transition-all hover:border-amber-400 hover:shadow-md hover:bg-amber-50"
-              >
-                <span className="text-sm font-semibold text-gray-800 group-hover:text-amber-700">
-                  {sc.state}
-                </span>
-                <span className="flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-amber-100 text-xs font-bold text-amber-700 group-hover:bg-amber-200">
-                  {sc.count}
-                </span>
-              </Link>
-            ))}
-          </div>
-          <div className="mt-8 text-center">
-            <Link
-              to="/dentists"
-              className="text-sm font-medium text-amber-600 hover:text-amber-700"
-            >
-              Browse all dentists by location →
-            </Link>
           </div>
         </div>
       </section>

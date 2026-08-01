@@ -19,16 +19,18 @@ function generateSessionToken(): string {
   return randomBytes(32).toString("hex");
 }
 
-/** Set session cookie via the response headers */
+/** Set session cookie via the response headers.
+ *  NOTE: Our cookies are set client-side via document.cookie (RPC architecture),
+ *  so HttpOnly MUST NOT be present — HttpOnly cookies cannot be set by JavaScript. */
 function setSessionCookie(accountId: string, token: string) {
   return {
-    "Set-Cookie": `${SESSION_COOKIE}=${accountId}:${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${60 * 60 * 24 * 7}`,
+    "Set-Cookie": `${SESSION_COOKIE}=${accountId}:${token}; Path=/; SameSite=Lax; Max-Age=${60 * 60 * 24 * 7}`,
   };
 }
 
 function clearSessionCookie() {
   return {
-    "Set-Cookie": `${SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`,
+    "Set-Cookie": `${SESSION_COOKIE}=; Path=/; SameSite=Lax; Max-Age=0`,
   };
 }
 

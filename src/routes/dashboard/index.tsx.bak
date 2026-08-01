@@ -1,0 +1,115 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { checkSessionFn, logoutFn } from "../../lib/auth";
+
+export const Route = createFileRoute("/dashboard/")({
+  component: DashboardIndex,
+});
+
+function DashboardIndex() {
+  const navigate = useNavigate();
+  const [account, setAccount] = useState<{
+    id: string;
+    email: string;
+    name: string;
+    accountType: string;
+  } | null>(null);
+  const [checking, setChecking] = useState(true);
+
+  useEffect(() => {
+    checkSessionFn({ data: { cookieHeader: document.cookie } })
+      .then((session) => {
+        if (!session.authenticated) {
+          navigate({ to: "/login" });
+        } else {
+          setAccount(session.account || null);
+        }
+      })
+      .catch(() => navigate({ to: "/login" }))
+      .finally(() => setChecking(false));
+  }, []);
+
+  async function handleLogout() {
+    const result = await logoutFn();
+    if (result.cookie) {
+      document.cookie = result.cookie["Set-Cookie"];
+    }
+    window.location.href = "/";
+  }
+
+  if (checking) {
+    return (
+      <div className="min-h-dvh bg-gray-50 flex items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-200 border-t-amber-500" />
+      </div>
+    );
+  }
+
+  if (!account) return null;
+
+  return (
+    <div className="min-h-dvh bg-gray-50">
+      <div className="mx-auto max-w-4xl px-6 py-16">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <p className="mt-2 text-gray-600">
+              Welcome back, {account.name || "Doctor"}. Manage your {account.accountType === "lab" ? "lab" : "practice"}{" "}
+              listing and view incoming patient connections.
+            </p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
+          >
+            Sign Out
+          </button>
+        </div>
+
+        <div className="mt-10 grid gap-6 sm:grid-cols-2">
+          <Link
+            to="/dashboard/connections"
+            className="group rounded-2xl bg-white p-8 shadow-sm border border-gray-200 hover:border-amber-300 hover:shadow-md transition-all"
+          >
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-6 w-6 text-amber-600">
+                  <path d="M3.105 2.289a.75.75 0 00-.826.95l1.437 5.036a.75.75 0 00.579.527l7.5 1.5a.75.75 0 010 1.466l-7.5 1.5a.75.75 0 00-.579.527l-1.437 5.036a.75.75 0 00.826.95 57.933 57.933 0 0016.393-8.022.75.75 0 000-1.318A57.933 57.933 0 003.105 2.289z" />
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900 group-hover:text-amber-600 transition-colors">
+                  Connection Requests
+                </h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  View and manage patient requests to connect with your practice.
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          <div className="rounded-2xl bg-white p-8 shadow-sm border border-gray-200 opacity-60">
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-6 w-6 text-gray-400">
+                  <path d="M7 3.5A1.5 1.5 0 018.5 2h3.879a1.5 1.5 0 011.06.44l3.122 3.12A1.5 1.5 0 0117 6.622V12.5a1.5 1.5 0 01-1.5 1.5h-1v-3.379a3 3 0 00-.879-2.121l-3.12-3.122A3 3 0 008.378 4.5H7V3.5z" />
+                  <path d="M4.5 6A1.5 1.5 0 003 7.5v9A1.5 1.5 0 004.5 18h7a1.5 1.5 0 001.5-1.5v-5.879a1.5 1.5 0 00-.44-1.06L9.44 6.439A1.5 1.5 0 008.378 6H4.5z" />
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">Practice Settings</h2>
+                <p className="mt-1 text-sm text-gray-500">Coming soon — update your profile and listing details.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <Link to="/dentists" className="text-sm text-gray-500 hover:text-amber-600 transition-colors">
+            ← Back to directory
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}

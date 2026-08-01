@@ -1,6 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { trackPageView } from "../api/analytics";
 
 export const Route = createFileRoute("/versalius/world")({
+  loader: () => {
+    trackPageView({ data: { path: "/versalius/world" } }).catch(() => {});
+  },
   component: WorldBible,
 });
 
