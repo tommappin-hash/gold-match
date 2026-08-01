@@ -1,19 +1,33 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { checkSessionFn, logoutFn } from "../../lib/auth";
 
 export const Route = createFileRoute("/dashboard/")({
-  loader: async () => {
-    const session = await checkSessionFn();
-    if (!session.authenticated) {
-      throw redirect({ to: "/login" });
-    }
-    return { account: session.account };
-  },
   component: DashboardIndex,
 });
 
 function DashboardIndex() {
-  const { account } = Route.useLoaderData();
+  const navigate = useNavigate();
+  const [account, setAccount] = useState<{
+    id: string;
+    email: string;
+    name: string;
+    accountType: string;
+  } | null>(null);
+  const [checking, setChecking] = useState(true);
+
+  useEffect(() => {
+    checkSessionFn({ data: { cookieHeader: document.cookie } })
+      .then((session) => {
+        if (!session.authenticated) {
+          navigate({ to: "/login" });
+        } else {
+          setAccount(session.account || null);
+        }
+      })
+      .catch(() => navigate({ to: "/login" }))
+      .finally(() => setChecking(false));
+  }, []);
 
   async function handleLogout() {
     const result = await logoutFn();
@@ -23,6 +37,16 @@ function DashboardIndex() {
     window.location.href = "/";
   }
 
+  if (checking) {
+    return (
+      <div className="min-h-dvh bg-gray-50 flex items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-200 border-t-amber-500" />
+      </div>
+    );
+  }
+
+  if (!account) return null;
+
   return (
     <div className="min-h-dvh bg-gray-50">
       <div className="mx-auto max-w-4xl px-6 py-16">
@@ -30,7 +54,7 @@ function DashboardIndex() {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
             <p className="mt-2 text-gray-600">
-              Welcome back, {account?.name || "Doctor"}. Manage your {account?.accountType === "lab" ? "lab" : "practice"}
+              Welcome back, {account.name || "Doctor"}. Manage your {account.accountType === "lab" ? "lab" : "practice"}
               listing and view incoming patient connections.
             </p>
           </div>
