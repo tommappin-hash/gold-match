@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { loginFn, setPasswordFn, lookupDentistFn } from "../lib/auth";
+import { loginFn, setPasswordFn, lookupAccountFn } from "../lib/auth";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -54,13 +54,19 @@ function LoginPage() {
     }
     setLoading(true);
     try {
-      const lookup = await lookupDentistFn({ data: { email } });
+      const lookup = await lookupAccountFn({ data: { email } });
       if (!lookup.found) {
         setError("Account not found. Check your email or register first.");
         setLoading(false);
         return;
       }
-      const result = await setPasswordFn({ data: { dentistId: lookup.dentistId, password } });
+      const result = await setPasswordFn({
+        data: {
+          accountId: lookup.accountId,
+          password,
+          accountType: lookup.accountType,
+        },
+      });
       if (result.success && result.cookie) {
         document.cookie = result.cookie["Set-Cookie"];
         navigate({ to: "/dashboard" });
@@ -87,9 +93,9 @@ function LoginPage() {
         </div>
 
         <div className="rounded-2xl bg-white p-8 shadow-sm border border-gray-200">
-          <h1 className="text-2xl font-bold text-gray-900">Dentist Login</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Dentist & Lab Login</h1>
           <p className="mt-2 text-sm text-gray-600">
-            Sign in to manage your practice listing and view patient connections.
+            Sign in to manage your listing and view patient connections.
           </p>
 
           <form onSubmit={noPassword ? handleSetPassword : handleLogin} className="mt-6 space-y-5">

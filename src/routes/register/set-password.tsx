@@ -36,7 +36,7 @@ function SetPasswordPage() {
     }
     setLoading(true);
     try {
-      const result = await setPasswordFn({ data: { dentistId, password } });
+      const result = await setPasswordFn({ data: { accountId: dentistId, password } });
       if (result.success && result.cookie) {
         document.cookie = result.cookie["Set-Cookie"];
         setDone(true);
