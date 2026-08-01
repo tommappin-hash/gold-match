@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { listConnections } from "~/routes/api/connections";
 import type { Connection } from "~/data/connections";
@@ -15,34 +15,33 @@ const STATUS_COLORS: Record<Connection["status"], string> = {
 };
 
 function DashboardConnections() {
-  const navigate = useNavigate();
-  const [checking, setChecking] = useState(true);
+  const [session, setSession] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [connections, setConnections] = useState<
     (Connection & { practiceName?: string })[]
   >([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingConnections, setLoadingConnections] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    checkSessionFn({ data: { cookieHeader: document.cookie } })
-      .then((session) => {
-        if (!session.authenticated) {
-          navigate({ to: "/login" });
-        }
-      })
-      .catch(() => navigate({ to: "/login" }))
-      .finally(() => setChecking(false));
+    checkSessionFn({ data: { cookieHeader: document.cookie } }).then((s) => {
+      if (!s.authenticated) window.location.href = "/login";
+      else {
+        setSession(s);
+        setLoading(false);
+      }
+    });
   }, []);
 
   useEffect(() => {
-    if (checking) return;
+    if (loading) return;
     listConnections({})
       .then(setConnections)
       .catch((err) => setError(err.message || "Failed to load connections"))
-      .finally(() => setLoading(false));
-  }, [checking]);
+      .finally(() => setLoadingConnections(false));
+  }, [loading]);
 
-  if (checking) {
+  if (loading) {
     return (
       <div className="min-h-dvh bg-gray-50 flex items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-200 border-t-amber-500" />
@@ -71,7 +70,7 @@ function DashboardConnections() {
         </div>
 
         <div className="mt-10">
-          {loading ? (
+          {loadingConnections ? (
             <div className="rounded-2xl bg-white p-12 text-center shadow-sm border border-gray-200">
               <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-amber-200 border-t-amber-500" />
               <p className="mt-4 text-sm text-gray-500">
