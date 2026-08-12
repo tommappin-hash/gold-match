@@ -61,7 +61,7 @@ export const getLabById = createServerFn()
     }
   });
 
-export const createLab = createServerFn()
+export const createLab = createServerFn({ method: "POST" })
   .validator((data: {
     labName: string;
     email: string;

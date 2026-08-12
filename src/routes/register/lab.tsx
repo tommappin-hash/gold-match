@@ -47,15 +47,17 @@ function LabRegistration() {
     try {
       const { createLab } = await import("../api/labs");
       await createLab({
-        labName: form.labName,
-        email: form.email,
-        phone: form.phone,
-        website: form.website,
-        city: form.city,
-        state: form.state,
-        zipCode: form.zipCode,
-        bio: form.bio,
-        services: form.services,
+        data: {
+          labName: form.labName,
+          email: form.email,
+          phone: form.phone,
+          website: form.website,
+          city: form.city,
+          state: form.state,
+          zipCode: form.zipCode,
+          bio: form.bio,
+          services: form.services,
+        },
       });
       setSubmitted(true);
     } catch (err) {

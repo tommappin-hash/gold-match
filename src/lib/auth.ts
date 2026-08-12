@@ -49,7 +49,7 @@ function getSessionFromCookies(cookieHeader: string): { accountId: string; token
 }
 
 /** Lookup an account (dentist or lab) by email — returns accountId and accountType regardless of password state */
-export const lookupAccountFn = createServerFn()
+export const lookupAccountFn = createServerFn({ method: "POST" })
   .validator((data: { email: string }) => data)
   .handler(async ({ data }) => {
     const db = sql();
@@ -70,7 +70,7 @@ export const lookupAccountFn = createServerFn()
 export const lookupDentistFn = lookupAccountFn;
 
 /** Login: validate email + password, return session cookie */
-export const loginFn = createServerFn()
+export const loginFn = createServerFn({ method: "POST" })
   .validator((data: { email: string; password: string }) => data)
   .handler(async ({ data }) => {
     try {
@@ -118,7 +118,7 @@ export const logoutFn = createServerFn().handler(async () => {
  *  Uses the cookieHeader pattern for RPC compatibility:
  *  - Client callers pass { cookieHeader: document.cookie }
  *  - SSR loaders call with no args; context fallback provides the cookie. */
-export const checkSessionFn = createServerFn()
+export const checkSessionFn = createServerFn({ method: "POST" })
   .validator((data: { cookieHeader?: string }) => data)
   .handler(async ({ data, context }: any) => {
     try {
@@ -179,7 +179,7 @@ export const checkSessionFn = createServerFn()
 
 /** Set password after registration (existing account, no password set yet).
  *  accountType defaults to "dentist" for backward compatibility. */
-export const setPasswordFn = createServerFn()
+export const setPasswordFn = createServerFn({ method: "POST" })
   .validator((data: { accountId: string; password: string; accountType?: string }) => data)
   .handler(async ({ data }) => {
     try {
@@ -207,7 +207,7 @@ export const setPasswordFn = createServerFn()
 
 /** Change password for an authenticated account (dentist or lab).
  *  Validates old password before updating. */
-export const changePasswordFn = createServerFn()
+export const changePasswordFn = createServerFn({ method: "POST" })
   .validator((data: { accountId: string; accountType: string; oldPassword: string; newPassword: string }) => data)
   .handler(async ({ data }) => {
     try {
