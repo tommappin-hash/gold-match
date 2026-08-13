@@ -97,8 +97,16 @@ function DentistProfile() {
                 <h2 className="text-lg font-semibold text-gray-900">Photos</h2>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
                   {dentist.photos.map((photo, i) => (
-                    <div key={i} className="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center text-sm text-gray-400">
-                      🦷 {photo.caption || "Practice photo"}
+                    <div key={i} className="overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+                      {photo.url && (
+                        <img src={photo.url} alt={photo.caption || "Practice photo"} className="h-auto w-full" loading="lazy" />
+                      )}
+                      {!photo.url && (
+                        <div className="p-8 text-center text-sm text-gray-400">🦷 {photo.caption || "Practice photo"}</div>
+                      )}
+                      {photo.caption && (
+                        <div className="px-3 py-2 text-sm text-gray-600">{photo.caption}</div>
+                      )}
                     </div>
                   ))}
                 </div>
