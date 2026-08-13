@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { type FormEvent, useState } from "react";
+import { type ChangeEvent, type FormEvent, useState } from "react";
 import { ALL_SERVICES, type Service, formatServiceLabel } from "~/data/dentists";
 import { createCheckoutSession } from "~/routes/api/create-checkout";
 import { saveDentistRegistration } from "~/routes/api/save-registration";
@@ -20,6 +20,7 @@ type FormData = {
   zipCode: string;
   bio: string;
   services: Service[];
+  photos: { url: string; caption?: string }[];
 };
 
 type FormErrors = Partial<Record<keyof FormData, string>>;
@@ -40,10 +41,13 @@ function DentistRegister() {
     zipCode: "",
     bio: "",
     services: [],
+    photos: [],
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
+  const [payError, setPayError] = useState<string | null>(null);
   const [referrer, setReferrer] = useState("");
+  const [photoError, setPhotoError] = useState<string | null>(null);
 
   const update = (field: keyof FormData, value: string | Service[]) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -97,25 +101,93 @@ function DentistRegister() {
 
   const handleBack = () => setStep((s) => Math.max(s - 1, 0));
 
+  const MAX_PHOTOS = 6;
+  const MAX_PHOTO_BYTES = 5 * 1024 * 1024; // 5MB
+  const MAX_DIM = 1600; // downscale longest side to keep payloads lean
+
+  const downscaleImage = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error("Could not read the image file."));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error("That file doesn't look like a valid image."));
+        img.onload = () => {
+          const scale = Math.min(1, MAX_DIM / Math.max(img.width, img.height));
+          const w = Math.max(1, Math.round(img.width * scale));
+          const h = Math.max(1, Math.round(img.height * scale));
+          const canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return reject(new Error("Your browser doesn't support image processing."));
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL("image/jpeg", 0.82));
+        };
+        img.src = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+
+  const handlePhotoSelect = async (e: ChangeEvent<HTMLInputElement>) => {
+    setPhotoError(null);
+    const files = e.target.files ? Array.from(e.target.files) : [];
+    e.target.value = ""; // allow re-selecting the same file later
+    if (files.length === 0) return;
+    if (form.photos.length + files.length > MAX_PHOTOS) {
+      setPhotoError(`You can upload up to ${MAX_PHOTOS} photos.`);
+      return;
+    }
+    try {
+      const processed: { url: string; caption?: string }[] = [];
+      for (const f of files) {
+        if (f.size > MAX_PHOTO_BYTES) {
+          setPhotoError(`"${f.name}" is larger than 5MB. Please choose a smaller file.`);
+          continue;
+        }
+        const url = await downscaleImage(f);
+        processed.push({ url, caption: f.name.replace(/\.[^.]+$/, "") });
+      }
+      if (processed.length > 0) {
+        setForm((prev) => ({ ...prev, photos: [...prev.photos, ...processed] }));
+      }
+    } catch (err: any) {
+      setPhotoError(err.message || "Failed to process photo.");
+    }
+  };
+
+  const removePhoto = (index: number) => {
+    setForm((prev) => ({
+      ...prev,
+      photos: prev.photos.filter((_, i) => i !== index),
+    }));
+    setPhotoError(null);
+  };
+
   const saveAndRedirect = async (stripeUrl: string) => {
     setSubmitting(true);
+    setPayError(null);
     try {
-      // Save registration to DB first
+      // Save registration to DB first. TanStack server fns require the
+      // payload under `data:` — the client wrapper reads opts.data.
       const saveResult = await saveDentistRegistration({
-        practiceName: form.practiceName,
-        email: form.email,
-        phone: form.phone,
-        website: form.website,
-        addressLine1: form.addressLine1,
-        addressLine2: form.addressLine2,
-        city: form.city,
-        state: form.state,
-        zipCode: form.zipCode,
-        bio: form.bio,
-        services: form.services,
+        data: {
+          practiceName: form.practiceName,
+          email: form.email,
+          phone: form.phone,
+          website: form.website,
+          addressLine1: form.addressLine1,
+          addressLine2: form.addressLine2,
+          city: form.city,
+          state: form.state,
+          zipCode: form.zipCode,
+          bio: form.bio,
+          services: form.services,
+          photos: form.photos,
+        },
       });
       if (!saveResult.success) {
-        setErrors({ practiceName: saveResult.error as any } as any);
+        setPayError(saveResult.error || "Failed to save registration. Please try again.");
         setSubmitting(false);
         return;
       }
@@ -125,7 +197,7 @@ function DentistRegister() {
       window.location.href = url.toString();
     } catch (err: any) {
       setSubmitting(false);
-      setErrors({ practiceName: err.message || "Failed to save registration." } as any);
+      setPayError(err.message || "Failed to save registration. Please try again.");
     }
   };
 
@@ -353,28 +425,49 @@ function DentistRegister() {
                   )}
                 </div>
 
-                {/* Photo upload placeholder */}
+                {/* Practice photos */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Practice Photos
                   </label>
                   <p className="mt-1 text-xs text-gray-400">
-                    Upload photos of your practice (optional). JPG, PNG up to 5MB.
+                    Upload photos of your practice (optional). JPG, PNG up to 5MB each — we'll
+                    optimize them automatically. Up to 6 photos.
                   </p>
-                  <div className="mt-2 flex items-center gap-4">
-                    <label className="flex cursor-pointer items-center gap-2 rounded-lg border-2 border-dashed border-gray-300 px-6 py-4 text-sm text-gray-500 hover:border-amber-400 hover:text-amber-600 transition-colors">
+                  <div className="mt-2">
+                    <label className="relative flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 px-6 py-4 text-sm text-gray-500 hover:border-amber-400 hover:text-amber-600 transition-colors">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                       </svg>
                       Choose Files
-                      <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => {
-                        if (e.target.files && e.target.files.length > 0) {
-                          const names = Array.from(e.target.files).map(f => f.name).join(", ");
-                          (e.target.nextSibling as HTMLElement).textContent = names;
-                        }
-                      }} />
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        multiple
+                        className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                        onChange={handlePhotoSelect}
+                      />
                     </label>
-                    <span className="text-xs text-gray-400">No files chosen</span>
+                    {photoError && (
+                      <p className="mt-2 text-sm text-red-600">{photoError}</p>
+                    )}
+                    {form.photos.length > 0 && (
+                      <ul className="mt-3 space-y-2">
+                        {form.photos.map((p, i) => (
+                          <li key={i} className="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700">
+                            <img src={p.url} alt="" className="h-10 w-10 rounded object-cover" />
+                            <span className="flex-1 truncate">{p.caption || `Photo ${i + 1}`}</span>
+                            <button
+                              type="button"
+                              onClick={() => removePhoto(i)}
+                              className="text-xs font-medium text-red-600 hover:text-red-800"
+                            >
+                              Remove
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </div>
               </div>
@@ -437,6 +530,11 @@ function DentistRegister() {
 
                 {/* Real Stripe payment */}
                 <div className="rounded-xl border border-gray-200 bg-gray-50 p-6 text-center">
+                  {payError && (
+                    <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                      {payError}
+                    </div>
+                  )}
                   <p className="text-sm text-gray-600">
                     Click the button below to complete your payment securely via
                     Stripe. You'll be redirected to Stripe's checkout page.

@@ -12,7 +12,7 @@ function generateSessionToken(): string {
   return randomBytes(32).toString("hex");
 }
 
-export const handleLogin = createServerFn()
+export const handleLogin = createServerFn({ method: "POST" })
   .validator((data: { email: string; password: string }) => data)
   .handler(async ({ data }) => {
     try {

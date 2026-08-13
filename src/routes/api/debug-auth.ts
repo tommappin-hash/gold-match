@@ -46,7 +46,7 @@ export const debugAuth = createServerFn()
     }
   });
 
-export const insertDentist = createServerFn()
+export const insertDentist = createServerFn({ method: "POST" })
   .validator((data: { email: string; practiceName: string }) => data)
   .handler(async ({ data }) => {
     try {

@@ -74,7 +74,7 @@ export const getPhotos = createServerFn()
 });
 
 /** Delete a photo */
-export const deletePhoto = createServerFn()
+export const deletePhoto = createServerFn({ method: "POST" })
   .validator((data: { photoId: string; cookieHeader?: string }) => data)
   .handler(async ({ data, context }: any) => {
     try {

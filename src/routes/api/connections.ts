@@ -5,7 +5,7 @@ import { connections } from "~/data/connections";
  * Submit a connection request from a patient to a dentist.
  * Stores in-memory when DATABASE_URL is not set.
  */
-export const submitConnection = createServerFn()
+export const submitConnection = createServerFn({ method: "POST" })
   .validator(
     (data: {
       dentistId: string;
