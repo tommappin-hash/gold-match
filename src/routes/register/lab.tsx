@@ -157,6 +157,13 @@ function LabRegistration() {
                 <button type="button" onClick={handleSubmit} disabled={submitting} className="rounded-lg bg-amber-500 px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-amber-600 disabled:opacity-50">{submitting ? "Submitting..." : "Submit Listing"}</button>
               )}
             </div>
+            <p className="mt-4 text-center text-xs text-gray-400">
+              Having trouble with the form? Email us at{" "}
+              <a href="mailto:info@easygoldcrowns.com" className="text-amber-600 underline hover:text-amber-700">
+                info@easygoldcrowns.com
+              </a>{" "}
+              and we'll get you listed.
+            </p>
           </form>
         </div>
       </div>

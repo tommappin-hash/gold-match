@@ -567,6 +567,13 @@ function DentistRegister() {
                     gold restoration services.
                   </span>
                 </label>
+                <p className="mt-4 text-xs text-gray-400">
+                  Having trouble with the form? Email us at{" "}
+                  <a href="mailto:info@easygoldcrowns.com" className="text-amber-600 underline hover:text-amber-700">
+                    info@easygoldcrowns.com
+                  </a>{" "}
+                  and we'll get you listed.
+                </p>
               </div>
               );
             })()}
@@ -594,14 +601,10 @@ function DentistRegister() {
                   Continue →
                 </button>
               ) : (
-                <a
-                  href="https://buy.stripe.com/00w3cvaFS5SxbnRfNK93y00"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-8 py-3 text-sm font-semibold text-white shadow-md hover:bg-amber-600 transition-colors"
-                >
-                  Pay $49 with Stripe →
-                </a>
+                // Payment step: the real Pay button lives in the payment box
+                // above (it saves the registration first). No dead Stripe link here —
+                // a raw <a> to Stripe would bypass the save and lose the signup.
+                <div />
               )}
             </div>
           </form>
