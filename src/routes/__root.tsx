@@ -116,6 +116,13 @@ function Nav() {
             Find a Lab
           </Link>
           <Link
+            to="/case-for-gold"
+            className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
+            activeProps={{ className: "text-amber-600 font-semibold" }}
+          >
+            The Case for Gold
+          </Link>
+          <Link
             to="/login"
             className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
             activeProps={{ className: "text-amber-600 font-semibold" }}
@@ -196,6 +203,14 @@ function Nav() {
             activeProps={{ className: "bg-amber-50 text-amber-700 font-semibold" }}
           >
             For Dentists
+          </Link>
+          <Link
+            to="/case-for-gold"
+            className="block rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-amber-50 hover:text-amber-700"
+            activeProps={{ className: "bg-amber-50 text-amber-700 font-semibold" }}
+            onClick={() => setMobileOpen(false)}
+          >
+            The Case for Gold
           </Link>
           <Link
             to="/login"
