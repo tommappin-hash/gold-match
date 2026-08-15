@@ -62,6 +62,17 @@ const THEMES: Theme[] = [
           "In an ordinary London general practice — not a university clinic — 194 cast gold onlays survived at 97% (10 years) and 94% (20 years); the authors called them \"a highly successful treatment option.\"",
       },
       {
+        id: "CFG-014",
+        shortTitle: "Olley, Andiappan & Frost 2018 — up to 50-year follow-up",
+        citation:
+          "Olley RC, Andiappan M, Frost PM. An up to 50-year follow-up of crown and veneer survival in a dental practice. Journal of Prosthetic Dentistry, 2018;119(6):935–41.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/28969914/",
+        urlLabel: "PubMed · PMID 28969914",
+        meta: ["Up to 50-year follow-up", "Posterior gold crowns"],
+        takeaway:
+          "A London practice followed restorations annually for up to 50 years — metal-ceramic crowns averaged ~47.5 years of survival, and the posterior gold crowns had 100% survival at 50 years. Gold is the restoration that outlives the practice.",
+      },
+      {
         id: "CFG-004",
         shortTitle: "Passia, Stampf & Strub 2013 — Gold vs CAD/CAM zirconia RCT",
         citation:
@@ -108,7 +119,7 @@ const THEMES: Theme[] = [
     number: "03",
     title: "Materials compared — what happens in the opposing arch and at the margin",
     blurb:
-      "Gold does not just last — it is also kind to the rest of the mouth. These studies compare gold with the ceramics most often recommended in its place.",
+      "Gold does not just last — it is also kind to the rest of the mouth. These studies compare gold with the ceramics and composite resins most often recommended in its place.",
     refs: [
       {
         id: "CFG-007",
@@ -120,6 +131,17 @@ const THEMES: Theme[] = [
         meta: ["Wear test", "Opposing tooth protection"],
         takeaway:
           "In wear tests, enamel opposing zirconia lost ~0.47 mm³ of tooth while gold lost ~0.01 mm³ — the authors warn zirconia is not for heavy grinders; gold doesn't destroy the opposing tooth.",
+      },
+      {
+        id: "CFG-013",
+        shortTitle: "Lee et al. 2014 — enamel vs lithium disilicate vs gold",
+        citation:
+          "Lee A, Swain M, He L, Lyons K. Wear behavior of human enamel against lithium disilicate glass ceramic and type III gold. Journal of Prosthetic Dentistry, 2014;112(6):1399–405.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/25311791/",
+        urlLabel: "PubMed · PMID 25311791",
+        meta: ["Wear lab comparison", "Enamel protection"],
+        takeaway:
+          "Head-to-head in the wear lab: Type III gold had a significantly lower friction coefficient and caused far less damage to opposing enamel than lithium disilicate ceramic — enamel against the ceramic cracked and furrowed, while enamel against gold wore gently.",
       },
       {
         id: "CFG-008",
@@ -164,6 +186,36 @@ const THEMES: Theme[] = [
         meta: ["Narrative review"],
         takeaway:
           "A broad review of the two ceramic materials most often recommended in place of gold — lithium disilicate and zirconia — the reference point for understanding what modern alternatives actually offer.",
+      },
+      {
+        id: "CFG-012",
+        shortTitle: "Beun et al. 2007",
+        citation:
+          "Beun S, Glorieux T, Devaux J, Vreven J, Leloup G. Characterization of nanofilled compared to universal and microfilled composites. Dental Materials, 2007;23(1):51–9.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/16423384/",
+        urlLabel: "PubMed · PMID 16423384",
+        meta: ["Materials science", "Composite resins"],
+        takeaway:
+          "A materials-science look at the composite resins used for today's standard fillings — the very materials whose mechanical limits keep the \"replace in 7–10 years\" cycle going.",
+      },
+    ],
+  },
+  {
+    number: "04",
+    title: "Background — the tissue gold protects",
+    blurb:
+      "Before the materials, the tissue: enamel is the tooth's outer armor, and it is what a durable restoration is designed to protect.",
+    refs: [
+      {
+        id: "CFG-015",
+        shortTitle: "Tooth Enamel — ScienceDirect Topics (background resource)",
+        citation:
+          "Tooth Enamel — topic overview. ScienceDirect Topics: Medicine and Dentistry (encyclopedia reference page, not a peer-reviewed study).",
+        url: "https://www.sciencedirect.com/topics/medicine-and-dentistry/tooth-enamel",
+        urlLabel: "ScienceDirect Topics · Medicine and Dentistry",
+        meta: ["Encyclopedia topic page", "Background resource"],
+        takeaway:
+          "Background reading on the tooth's outer armor — enamel is the hardest substance in the human body, and it's the tissue a gold restoration is designed to protect for a lifetime.",
       },
     ],
   },
@@ -222,15 +274,15 @@ function CaseForGoldPage() {
         {/* At a glance */}
         <div className="mt-10 grid gap-4 sm:grid-cols-3">
           <div className="rounded-xl border border-gray-200 bg-white p-5 text-center shadow-sm">
-            <p className="text-3xl font-bold text-amber-600">11</p>
+            <p className="text-3xl font-bold text-amber-600">15</p>
             <p className="mt-1 text-sm font-medium text-gray-600">
-              Verified peer-reviewed references
+              References in this library
             </p>
           </div>
           <div className="rounded-xl border border-gray-200 bg-white p-5 text-center shadow-sm">
-            <p className="text-3xl font-bold text-amber-600">3</p>
+            <p className="text-3xl font-bold text-amber-600">4</p>
             <p className="mt-1 text-sm font-medium text-gray-600">
-              Themes: longevity, margin, materials
+              Themes: longevity, margin, materials, background
             </p>
           </div>
           <div className="rounded-xl border border-gray-200 bg-white p-5 text-center shadow-sm">
