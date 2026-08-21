@@ -12,6 +12,7 @@ type Reference = {
   urlLabel: string;
   meta: string[];
   takeaway: string;
+  note?: string;
 };
 
 type Theme = {
@@ -71,6 +72,29 @@ const THEMES: Theme[] = [
         meta: ["Up to 50-year follow-up", "Posterior gold crowns"],
         takeaway:
           "A London practice followed restorations annually for up to 50 years — metal-ceramic crowns averaged ~47.5 years of survival, and the posterior gold crowns had 100% survival at 50 years. Gold is the restoration that outlives the practice.",
+      },
+      {
+        id: "CFG-018",
+        shortTitle: "Donovan et al. 2004 — 1,314 cast gold restorations, up to 52 years at 95.4%",
+        citation:
+          "Donovan T, Simonsen RJ, Guertin G, Tucker RV. Retrospective clinical evaluation of 1,314 cast gold restorations in service from 1 to 52 years. Journal of Esthetic and Restorative Dentistry, 2004;16(3):194–204.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/15597641/",
+        urlLabel: "PubMed · PMID 15597641",
+        meta: ["Up to 52-year follow-up", "1,314 cast gold restorations"],
+        takeaway:
+          "The definitive cast-gold longevity record: 1,314 cast gold restorations (inlays, onlays, partial and full veneer crowns) placed by one master practitioner survived at 95.4% overall — 45% still in service after 25–52 years, and 94.1% of those beyond 40 years still going. Gold is not a repair you repeat; it's a restoration you retire with.",
+        note: "Accuracy note: this cohort mixes restoration types (inlays, onlays and crowns — not inlays alone) and comes from a single elite operator; the 95.4% is overall survival across 1–52 years of service. I phrase it as \"cast gold restorations,\" never just \"inlays.\"",
+      },
+      {
+        id: "CFG-016",
+        shortTitle: "Makhija et al. 2016 — what dentists actually choose for crowns (National Dental PBRN)",
+        citation:
+          "Makhija SK, Lawson NC, Gilbert GH, Litaker MS, McClelland JA, Louis DR, Gordan VV, Pihlstrom DJ, Meyerowitz C, Mungia R, McCracken MS; National Dental PBRN Collaborative Group. Dentist material selection for single-unit crowns: findings from the National Dental Practice-Based Research Network. Journal of Dentistry, 2016;55:40–7.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/27693778/",
+        urlLabel: "PubMed · PMID 27693778",
+        meta: ["1,777 US dentists surveyed", "National Dental PBRN"],
+        takeaway:
+          "1,777 US dentists surveyed (83% response). Top 3 choices for a posterior crown: all-zirconia 32%, porcelain-fused-to-metal 31%, lithium disilicate 21% — ceramic-based materials dominate the crown market; full-metal (the category gold crowns sit in) was a rare choice. This is the citation for \"when a filling fails, the usual crown is ceramic.\"",
       },
       {
         id: "CFG-004",
@@ -198,6 +222,17 @@ const THEMES: Theme[] = [
         takeaway:
           "A materials-science look at the composite resins used for today's standard fillings — the very materials whose mechanical limits keep the \"replace in 7–10 years\" cycle going.",
       },
+      {
+        id: "CFG-017",
+        shortTitle: "Kopperud et al. 2016 — the Post-Amalgam Era (Norway)",
+        citation:
+          "Kopperud SE, Staxrud F, Espelid I, Tveit AB. The Post-Amalgam Era: Norwegian Dentists' Experiences with Composite Resins and Repair of Defective Amalgam Restorations. International Journal of Environmental Research and Public Health, 2016;13(4):441.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/27110804/",
+        urlLabel: "PubMed · PMID 27110804",
+        meta: ["National survey", "Norway, post-amalgam"],
+        takeaway:
+          "Norway banned amalgam in 2008; one year later, a national survey (61.3% of all dentists) found composite was the preferred material for 99.1% — and secondary caries was the most commonly reported cause of failure, at 72.7%, followed by fracture at 25.1%. Only 45.8% of dentists expected Class II composites to last ≥10 years, and 71.2% expected better longevity if the restoration had been amalgam. Real-world proof that when composite becomes the default, recurrent decay at the margin becomes the dominant failure mode — the exact problem gold seals.",
+      },
     ],
   },
   {
@@ -274,7 +309,7 @@ function CaseForGoldPage() {
         {/* At a glance */}
         <div className="mt-10 grid gap-4 sm:grid-cols-3">
           <div className="rounded-xl border border-gray-200 bg-white p-5 text-center shadow-sm">
-            <p className="text-3xl font-bold text-amber-600">15</p>
+            <p className="text-3xl font-bold text-amber-600">18</p>
             <p className="mt-1 text-sm font-medium text-gray-600">
               References in this library
             </p>
@@ -372,6 +407,14 @@ function CaseForGoldPage() {
                       {ref.takeaway}
                     </p>
                   </div>
+
+                  {ref.note && (
+                    <div className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-3">
+                      <p className="text-xs leading-relaxed text-gray-600">
+                        {ref.note}
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
