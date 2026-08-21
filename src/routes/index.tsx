@@ -138,6 +138,42 @@ function Home() {
         <div className="absolute -bottom-20 left-0 -z-10 h-[400px] w-[400px] rounded-full bg-yellow-100/30 blur-3xl" />
       </section>
 
+      {/* Treatment Scenarios — patient education */}
+      <section className="bg-white py-20 sm:py-28">
+        <div className="mx-auto max-w-4xl px-6 text-center">
+          <span className="inline-flex items-center rounded-full bg-amber-100 px-4 py-1.5 text-sm font-semibold text-amber-800">
+            At a glance
+          </span>
+          <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            One cavity. One decision.{" "}
+            <span className="bg-gradient-to-r from-amber-500 to-yellow-600 bg-clip-text text-transparent">
+              Fifty years.
+            </span>
+          </h2>
+          <p className="mt-4 text-lg leading-relaxed text-gray-600">
+            The material chosen for a first filling sets the course of the next
+            fifty years. Here is what four common choices actually cost over a
+            lifetime.
+          </p>
+          <img
+            src="/field-kit/social/treatment-scenarios-2026-v3.png"
+            alt="Infographic comparing four filling materials over 50 years — gold costs $755 once and lasts 50+ years; composite, amalgam and ceramic paths cost $6,000+ in repeat visits. Gold saves approximately $6,000."
+            className="mx-auto mt-10 max-w-2xl rounded-2xl shadow-xl ring-1 ring-gray-200"
+          />
+          <p className="mt-8 text-sm text-gray-500">
+            The numbers and their sources are based on the published longevity
+            record. See the peer-reviewed evidence{" "}
+            <Link
+              to="/case-for-gold"
+              className="font-semibold text-amber-600 underline underline-offset-2 hover:text-amber-700"
+            >
+              on our Case for Gold page
+            </Link>
+            .
+          </p>
+        </div>
+      </section>
+
       {/* How It Works */}
       <section id="how-it-works" className="bg-white py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6">
@@ -264,19 +300,13 @@ function Home() {
             superheroes, bacteria launch invasions, and the patient&apos;s sovereignty hangs
             in the balance. This is the story your dentist never told you.
           </p>
-          <Link
-            to="/versalius"
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#C8910B] px-6 py-3 text-sm font-bold text-[#0A1628] shadow-lg shadow-[#C8910B]/25 transition-all hover:bg-[#E5B83C]"
-          >
-            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                clipRule="evenodd"
-              />
+          <span className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#C8910B]/40 bg-[#C8910B]/10 px-6 py-3 text-sm font-bold tracking-wide text-[#C8910B]">
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <circle cx="12" cy="12" r="9" />
+              <path strokeLinecap="round" d="M12 7v5l3 3" />
             </svg>
-            Start Watching
-          </Link>
+            Coming Soon
+          </span>
         </div>
       </section>
 
