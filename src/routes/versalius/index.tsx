@@ -44,6 +44,23 @@ const characters = [
 export default function VersaliusLanding() {
   return (
     <div className="min-h-dvh bg-[#0A1628] text-white font-outfit">
+      {/* In Production banner */}
+      <div className="border-b border-[#C8910B]/30 bg-gradient-to-r from-[#C8910B]/15 via-[#E5B83C]/10 to-[#C8910B]/15 px-6 py-3 text-center">
+        <span className="inline-flex flex-wrap items-center justify-center gap-2 text-sm font-semibold tracking-wide text-[#C8910B]">
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <circle cx="12" cy="12" r="9" />
+            <path strokeLinecap="round" d="M12 7v5l3 3" />
+          </svg>
+          In Production — episodes coming soon. Meet the world while we build.
+        </span>
+      </div>
+
       {/* Hero */}
       <section className="relative overflow-hidden px-6 py-24 sm:py-32">
         <div className="absolute inset-0 bg-gradient-to-b from-[#1A73E8]/10 via-[#0A1628] to-[#0A1628]" />
@@ -76,7 +93,7 @@ export default function VersaliusLanding() {
                   clipRule="evenodd"
                 />
               </svg>
-              Watch &ldquo;The Long Defense&rdquo;
+              Explore &ldquo;The Long Defense&rdquo; pilot
             </Link>
             <Link
               to="/versalius/characters"

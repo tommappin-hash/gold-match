@@ -289,6 +289,19 @@ function CaseForGoldPage() {
           sealing the margin where bacteria exploit weakness.
         </p>
 
+        {/* At a glance */}
+        <figure className="mt-10 text-center">
+          <img
+            src="/field-kit/social/treatment-scenarios-2026-v3.png"
+            alt="Infographic comparing four filling materials over 50 years — gold costs $755 once and lasts 50+ years; composite, amalgam and ceramic paths cost $6,000+ in repeat visits. Gold saves approximately $6,000."
+            className="mx-auto max-w-xl rounded-2xl shadow-lg ring-1 ring-gray-200"
+          />
+          <figcaption className="mt-4 text-sm text-gray-500">
+            One cavity, one decision, fifty years — four material paths and what
+            each costs over a lifetime.
+          </figcaption>
+        </figure>
+
         {/* Why this library exists */}
         <div className="mt-10 rounded-2xl border border-amber-200 bg-amber-50 p-7 sm:p-8">
           <h2 className="text-xl font-bold text-gray-900">
