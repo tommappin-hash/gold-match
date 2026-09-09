@@ -2,10 +2,26 @@ import { createServerFn } from "@tanstack/react-start";
 import { sampleDentists, type Dentist, type Service } from "~/data/dentists";
 
 /**
- * Server function to fetch all dentists from the database.
- * Falls back to sampleDentists mock data when DATABASE_URL is not set.
+ * Whether sample/mock dentist data may be returned by these server functions.
+ *
+ * TRUST: this directory's pitch is "find a REAL gold dentist", so it must never
+ * list invented practices to the public. If a stale Neon connection (see the
+ * stale-connection note in src/db.ts) or a missing DATABASE_URL ever triggered
+ * the mock fallback in production, real patients would be shown fake practices
+ * with fake phone numbers and websites. That cannot happen.
+ *
+ * Sample data is therefore dev-only and opt-in: it is returned only when
+ * VITE_ENABLE_SAMPLE_DATA="true" is explicitly set for a local/dev build. The
+ * flag defaults off, so a production build can never return sample data no
+ * matter how the query path behaves.
  */
-export const getDentists = createServerFn().handler(async () => {
+const sampleDataEnabled = import.meta.env.VITE_ENABLE_SAMPLE_DATA === "true";
+
+/**
+ * Server function to fetch all dentists from the database.
+ * Falls back to sample data only in dev when VITE_ENABLE_SAMPLE_DATA is set.
+ */
+export const getDentists = createServerFn().handler(async (): Promise<Dentist[]> => {
   if (process.env.DATABASE_URL) {
     try {
       const { sql } = await import("~/db");
@@ -36,16 +52,18 @@ export const getDentists = createServerFn().handler(async () => {
         paymentStatus: r.payment_status,
       }));
     } catch (err) {
-      console.error("DB query failed, falling back to mock data:", err);
+      console.error("DB query failed:", err);
+      if (!sampleDataEnabled) return [];
     }
   }
-  // Fallback to mock data
-  return sampleDentists;
+  // Dev-only, opt-in fallback (see sampleDataEnabled note above).
+  return sampleDataEnabled ? sampleDentists : [];
 });
 
 /**
  * Server function to fetch a single dentist by ID.
- * Falls back to sampleDentists mock data when DATABASE_URL is not set.
+ * Returns null when not found; falls back to sample data only in dev when
+ * VITE_ENABLE_SAMPLE_DATA is set.
  */
 export const getDentistById = createServerFn()
   .handler(async (opts: { data: string }) => {
@@ -81,11 +99,14 @@ export const getDentistById = createServerFn()
           paymentStatus: r.payment_status,
         } as Dentist;
       } catch (err) {
-        console.error("DB query failed, falling back to mock data:", err);
+        console.error("DB query failed:", err);
+        if (!sampleDataEnabled) return null;
       }
     }
-    // Fallback to mock data
-    return sampleDentists.find((d) => d.id === id) || null;
+    // Dev-only, opt-in fallback (see sampleDataEnabled note above).
+    return sampleDataEnabled
+      ? sampleDentists.find((d) => d.id === id) || null
+      : null;
   });
 
 export type StateCount = { state: string; count: number };

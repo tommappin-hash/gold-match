@@ -1,22 +1,16 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { type FormEvent, useState } from "react";
-import { formatServiceLabel, sampleDentists } from "~/data/dentists";
+import { formatServiceLabel } from "~/data/dentists";
 import { submitConnection } from "~/routes/api/connections";
 import { trackPageView } from "~/routes/api/analytics";
 
 export const Route = createFileRoute("/dentists/$id")({
   loader: async ({ params }) => {
     trackPageView({ data: { path: `/dentists/${params.id}` } }).catch(() => {});
-    // Try the server function first, fall back to mock data
-    try {
-      const { getDentistById } = await import("~/routes/api/dentists");
-      const dentist = await getDentistById({ data: params.id });
-      if (dentist) return dentist;
-    } catch (err) {
-      console.error("getDentistById failed:", err);
-    }
-    // Fallback to mock data directly
-    const dentist = sampleDentists.find((d) => d.id === params.id);
+    // getDentistById returns null when not found — and never returns sample data
+    // in production (see the sampleDataEnabled note in api/dentists.ts).
+    const { getDentistById } = await import("~/routes/api/dentists");
+    const dentist = await getDentistById({ data: params.id });
     if (!dentist) throw notFound();
     return dentist;
   },
