@@ -141,6 +141,13 @@ ALTER TABLE dentists ADD COLUMN IF NOT EXISTS password_salt TEXT;
 ALTER TABLE dentists ADD COLUMN IF NOT EXISTS session_token TEXT;
 
 -- ============================================================================
+-- Marketing attribution (added 2026-09-09)
+-- ============================================================================
+-- Free-text "referred by" captured on signup for marketing attribution.
+-- Empty string = organic signup; any non-empty text = referred (e.g. a name).
+ALTER TABLE dentists ADD COLUMN IF NOT EXISTS referred_by TEXT NOT NULL DEFAULT '';
+
+-- ============================================================================
 -- Page Views (light analytics)
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS page_views (

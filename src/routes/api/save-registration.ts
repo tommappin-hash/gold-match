@@ -18,6 +18,7 @@ export const saveDentistRegistration = createServerFn({ method: "POST" })
       bio: string;
       services: string[];
       photos?: { url: string; caption?: string }[];
+      referredBy?: string;
     }) => data
   )
   .handler(async (opts: any) => {
@@ -45,12 +46,13 @@ export const saveDentistRegistration = createServerFn({ method: "POST" })
         INSERT INTO dentists (
           practice_name, email, phone, website,
           address_line1, address_line2, city, state, zip_code,
-          bio, services, photos,
+          bio, services, photos, referred_by,
           listing_status, payment_status
         ) VALUES (
           ${data.practiceName}, ${data.email}, ${data.phone}, ${data.website || null},
           ${data.addressLine1 || null}, ${data.addressLine2 || null}, ${data.city}, ${data.state}, ${data.zipCode},
           ${data.bio}, ${data.services}, ${JSON.stringify(data.photos || [])}::jsonb,
+          ${(data.referredBy || "").trim()},
           'active', 'unpaid'
         )
         RETURNING id

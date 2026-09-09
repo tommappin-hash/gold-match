@@ -184,6 +184,7 @@ function DentistRegister() {
           bio: form.bio,
           services: form.services,
           photos: form.photos,
+          referredBy: referrer,
         },
       });
       if (!saveResult.success) {
