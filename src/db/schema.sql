@@ -145,7 +145,8 @@ ALTER TABLE dentists ADD COLUMN IF NOT EXISTS session_token TEXT;
 -- ============================================================================
 -- Free-text "referred by" captured on signup for marketing attribution.
 -- Empty string = organic signup; any non-empty text = referred (e.g. a name).
-ALTER TABLE dentists ADD COLUMN IF NOT EXISTS referred_by TEXT NOT NULL DEFAULT '';
+-- Explicit '' default keeps organic signups distinguishable from missing data.
+ALTER TABLE dentists ADD COLUMN IF NOT EXISTS referrer TEXT NOT NULL DEFAULT '';
 
 -- ============================================================================
 -- Page Views (light analytics)
