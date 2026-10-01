@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { type ChangeEvent, type FormEvent, useState } from "react";
 import { ALL_SERVICES, type Service, formatServiceLabel } from "~/data/dentists";
-import { createCheckoutSession } from "~/routes/api/create-checkout";
 import { saveDentistRegistration } from "~/routes/api/save-registration";
 
 export const Route = createFileRoute("/register/dentist")({
@@ -184,7 +183,7 @@ function DentistRegister() {
           bio: form.bio,
           services: form.services,
           photos: form.photos,
-          referredBy: referrer,
+          referrer,
         },
       });
       if (!saveResult.success) {
@@ -192,9 +191,14 @@ function DentistRegister() {
         setSubmitting(false);
         return;
       }
-      // Redirect to Stripe (append dentistId for password setup flow)
+      // Redirect to Stripe, binding the payment to the saved row via
+      // client_reference_id (Stripe Payment Links forward this to the Checkout
+      // Session, and the checkout.session.completed webhook uses it to mark the
+      // row paid). prefilled_email spares re-typing and gives the webhook an
+      // email fallback if the reference is ever missing.
       const url = new URL(stripeUrl, window.location.origin);
-      url.searchParams.set("dentist_id", saveResult.dentistId);
+      url.searchParams.set("client_reference_id", saveResult.dentistId);
+      url.searchParams.set("prefilled_email", form.email);
       window.location.href = url.toString();
     } catch (err: any) {
       setSubmitting(false);

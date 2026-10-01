@@ -18,7 +18,7 @@ export const saveDentistRegistration = createServerFn({ method: "POST" })
       bio: string;
       services: string[];
       photos?: { url: string; caption?: string }[];
-      referredBy?: string;
+      referrer?: string;
     }) => data
   )
   .handler(async (opts: any) => {
@@ -46,22 +46,22 @@ export const saveDentistRegistration = createServerFn({ method: "POST" })
         INSERT INTO dentists (
           practice_name, email, phone, website,
           address_line1, address_line2, city, state, zip_code,
-          bio, services, photos, referred_by,
+          bio, services, photos, referrer,
           listing_status, payment_status
         ) VALUES (
           ${data.practiceName}, ${data.email}, ${data.phone}, ${data.website || null},
           ${data.addressLine1 || null}, ${data.addressLine2 || null}, ${data.city}, ${data.state}, ${data.zipCode},
           ${data.bio}, ${data.services}, ${JSON.stringify(data.photos || [])}::jsonb,
-          ${(data.referredBy || "").trim()},
+          ${(data.referrer || "").trim()},
           'active', 'unpaid'
         )
         RETURNING id
       `;
       return { success: true, dentistId: String(result[0].id), alreadyExists: false };
     } catch (e: any) {
-      if (e.message?.includes("DATABASE_URL")) {
-        return { success: true, dentistId: "mock-" + Date.now(), alreadyExists: false };
-      }
+      // NOTE: a save must either INSERT a row or report failure. There is no
+      // mock/silent-success path here — a "success" without a DB row is what
+      // caused paid signups to vanish (Dana Fuhrmann, 2026-09-29).
       if (e.message?.includes("duplicate key") || e.message?.includes("unique")) {
         return { success: false, error: "A registration with this email already exists." };
       }
