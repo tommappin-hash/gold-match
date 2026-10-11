@@ -1,10 +1,41 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useSearch } from "@tanstack/react-router";
 import { type ChangeEvent, type FormEvent, useState } from "react";
 import { ALL_SERVICES, type Service, formatServiceLabel } from "~/data/dentists";
-import { createCheckoutSession } from "~/routes/api/create-checkout";
 import { saveDentistRegistration } from "~/routes/api/save-registration";
 
+type Tier = "founder" | "standard" | "supporter";
+
+// One-time listing tiers. Each maps to a Stripe Payment Link (founder/supporter
+// are the $24.50 founding rates; standard is $49). Every path to these links goes
+// through the form (save row FIRST, then redirect with client_reference_id), so a
+// charge can never happen without a saved dentist row.
+const TIERS: Record<Tier, { url: string; price: string; label: string }> = {
+  founder: {
+    url: "https://buy.stripe.com/6oUbJ1bJWbcR3VpeJG93y01",
+    price: "$24.50",
+    label: "Founding Member — 50% off",
+  },
+  standard: {
+    url: "https://buy.stripe.com/00w3cvaFS5SxbnRfNK93y00",
+    price: "$49",
+    label: "Standard",
+  },
+  supporter: {
+    url: "https://buy.stripe.com/4gM00j01e4OtfE7bxu93y02",
+    price: "$24.50",
+    label: "Supporter",
+  },
+};
+
 export const Route = createFileRoute("/register/dentist")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    tier:
+      search.tier === "founder" ||
+      search.tier === "standard" ||
+      search.tier === "supporter"
+        ? (search.tier as Tier)
+        : undefined,
+  }),
   component: DentistRegister,
 });
 
@@ -28,6 +59,7 @@ type FormErrors = Partial<Record<keyof FormData, string>>;
 const STEPS = ["Practice Info", "Location", "Services & Bio", "Payment"] as const;
 
 function DentistRegister() {
+  const { tier: searchTier } = useSearch({ from: "/register/dentist" });
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormData>({
     practiceName: "",
@@ -184,7 +216,7 @@ function DentistRegister() {
           bio: form.bio,
           services: form.services,
           photos: form.photos,
-          referredBy: referrer,
+          referrer,
         },
       });
       if (!saveResult.success) {
@@ -192,9 +224,14 @@ function DentistRegister() {
         setSubmitting(false);
         return;
       }
-      // Redirect to Stripe (append dentistId for password setup flow)
+      // Redirect to Stripe, binding the payment to the saved row via
+      // client_reference_id (Stripe Payment Links forward this to the Checkout
+      // Session, and the checkout.session.completed webhook uses it to mark the
+      // row paid). prefilled_email spares re-typing and gives the webhook an
+      // email fallback if the reference is ever missing.
       const url = new URL(stripeUrl, window.location.origin);
-      url.searchParams.set("dentist_id", saveResult.dentistId);
+      url.searchParams.set("client_reference_id", saveResult.dentistId);
+      url.searchParams.set("prefilled_email", form.email);
       window.location.href = url.toString();
     } catch (err: any) {
       setSubmitting(false);
@@ -476,12 +513,10 @@ function DentistRegister() {
 
             {/* Step 3: Payment */}
             {step === 3 && (() => {
-              const showFounder = referrer.trim().length > 0;
-              const price = showFounder ? "$24.50" : "$49";
-              const stripeLink = showFounder
-                ? "https://buy.stripe.com/6oUbJ1bJWbcR3VpeJG93y01"
-                : "https://buy.stripe.com/00w3cvaFS5SxbnRfNK93y00";
-              const priceLabel = showFounder ? "Founding Member — 50% off" : "Standard";
+              const effectiveTier: Tier =
+                searchTier ?? (referrer.trim().length > 0 ? "founder" : "standard");
+              const { url: stripeLink, price, label: priceLabel } = TIERS[effectiveTier];
+              const isDiscounted = effectiveTier !== "standard";
 
               return (
               <div className="space-y-5">
@@ -507,7 +542,7 @@ function DentistRegister() {
                 </div>
 
                 {/* Price display */}
-                <div className={`rounded-xl border p-6 ${showFounder ? "border-green-200 bg-green-50" : "border-amber-200 bg-amber-50"}`}>
+                <div className={`rounded-xl border p-6 ${isDiscounted ? "border-green-200 bg-green-50" : "border-amber-200 bg-amber-50"}`}>
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="font-semibold text-gray-900">
@@ -518,10 +553,10 @@ function DentistRegister() {
                       </p>
                     </div>
                     <div className="text-right">
-                      {showFounder && (
+                      {isDiscounted && (
                         <span className="block text-xs font-medium text-green-700 line-through">$49</span>
                       )}
-                      <span className={`text-2xl font-bold ${showFounder ? "text-green-600" : "text-amber-600"}`}>
+                      <span className={`text-2xl font-bold ${isDiscounted ? "text-green-600" : "text-amber-600"}`}>
                         {price}
                       </span>
                       <span className="block text-xs font-medium text-gray-500">{priceLabel}</span>

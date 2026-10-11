@@ -1,21 +1,15 @@
+// DEPRECATED — this is NOT the Stripe webhook.
+//
+// The real Stripe webhook lives at server/stripe-webhook.ts and is wired into the
+// Bun production server (serve.ts) as `POST /api/stripe/webhook`. It verifies the
+// signature with STRIPE_WEBHOOK_SECRET and marks the bound dentist row paid on
+// checkout.session.completed.
+//
+// This createServerFn stub is not an HTTP route Stripe could POST to, and it is
+// not imported anywhere. It is left in place only to avoid touching route
+// registration; do NOT wire payment confirmation here.
 import { createServerFn } from "@tanstack/react-start";
 
-/**
- * Stripe webhook handler for payment confirmation.
- * When STRIPE_SECRET_KEY is set, validates the webhook signature
- * and toggles the dentist's listing active.
- */
-export const handleStripeWebhook = createServerFn()
-  .handler(async () => {
-    const stripeKey = process.env.STRIPE_SECRET_KEY;
-    if (!stripeKey) {
-      return { received: true, note: "Mock webhook — Stripe not configured" };
-    }
-
-    // Real webhook processing would go here:
-    // 1. Read raw body from the request
-    // 2. Verify signature with stripe.webhooks.constructEvent()
-    // 3. Mark dentist as payment_status='paid', listing_status='active' in DB
-
-    return { received: true };
-  });
+export const handleStripeWebhook = createServerFn().handler(async () => {
+  return { received: true, note: "Deprecated stub — real webhook is server/stripe-webhook.ts" };
+});
