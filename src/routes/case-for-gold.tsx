@@ -233,6 +233,30 @@ const THEMES: Theme[] = [
         takeaway:
           "Norway banned amalgam in 2008; one year later, a national survey (61.3% of all dentists) found composite was the preferred material for 99.1% — and secondary caries was the most commonly reported cause of failure, at 72.7%, followed by fracture at 25.1%. Only 45.8% of dentists expected Class II composites to last ≥10 years, and 71.2% expected better longevity if the restoration had been amalgam. Real-world proof that when composite becomes the default, recurrent decay at the margin becomes the dominant failure mode — the exact problem gold seals.",
       },
+      {
+        id: "CFG-019",
+        shortTitle: "Monasky & Taylor 1971 — the keystone wear study",
+        citation:
+          "Monasky GE, Taylor DF. Studies on the wear of porcelain, enamel, and gold. Journal of Prosthetic Dentistry, 1971;25(3):299–306.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/5276853/",
+        urlLabel: "PubMed · PMID 5276853",
+        meta: ["1971 foundation study", "Wear science"],
+        takeaway:
+          "The 1971 foundation study that first measured how porcelain, enamel, and gold wear against one another. It documented porcelain's \"repeated clinical observations of excessive wear of opposing teeth\" — the original science behind the hardness argument: ceramic is hard on the tooth it meets, while gold has been measured for 55 years as kind to opposing enamel.",
+        note:
+          "This 1971 paper is an index item without an abstract in PubMed. It is cited for its qualitative finding (porcelain's excessive wear of opposing teeth), not for specific wear figures, which are not quoted here.",
+      },
+      {
+        id: "CFG-020",
+        shortTitle: "Schulman & Pentel 1981 — the rational use of materials in occlusion",
+        citation:
+          "Schulman A, Pentel L. The rational use of materials in occlusion. Dental Clinics of North America, 1981;25(3):455–68.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/7021236/",
+        urlLabel: "PubMed · PMID 7021236",
+        meta: ["1981 doctrine", "Materials & occlusion"],
+        takeaway:
+          "The 1981 NYU doctrine paper on why the choice of restorative material profoundly influences the success of restored function — restoring function means the material must return the tooth to appropriate anatomic and functional form. Together with the 1971 wear study, it forms the archival spine of the hardness-and-occlusion argument.",
+      },
     ],
   },
   {
@@ -251,6 +275,180 @@ const THEMES: Theme[] = [
         meta: ["Encyclopedia topic page", "Background resource"],
         takeaway:
           "Background reading on the tooth's outer armor — enamel is the hardest substance in the human body, and it's the tissue a gold restoration is designed to protect for a lifetime.",
+      },
+    ],
+  },
+  {
+    number: "05",
+    title: "Caries epidemiology — where decay actually happens",
+    blurb:
+      "Caries is not spread evenly across the mouth. These studies map where decay strikes and why so many fillings are replacements.",
+    refs: [
+      {
+        id: "CFG-021",
+        shortTitle: "Demirci, Tuncer & Yuceokur 2010 — caries prevalence by tooth surface",
+        citation:
+          "Demirci M, Tuncer S, Yuceokur AA. Prevalence of caries on individual tooth surfaces and its distribution by age and gender in university clinic patients. European Journal of Dentistry, 2010;4(3):270–79.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/20613915/",
+        urlLabel: "PubMed · PMID 20613915",
+        meta: ["Caries epidemiology", "University clinic patients"],
+        takeaway:
+          "This study maps caries across individual tooth surfaces and shows the chewing (molar) surfaces carry the heaviest burden of first-presenting decay. The back teeth are where a durable first treatment matters most.",
+        note:
+          "Accuracy note: the widely shared \"57% of caries first presents in molars\" figure is calculated from Table 1 of this paper, not a number printed in it. The study is a university-clinic sample, so it reflects referred patients rather than the general public.",
+      },
+      {
+        id: "CFG-024",
+        shortTitle: "Eltahlah et al. 2018 — why restorations are replaced",
+        citation:
+          "Eltahlah D, Lynch CD, Chadwick BL, Blum IR, Wilson NHF. An update on the reasons for placement and replacement of direct restorations. Journal of Dentistry, 2018;72:1–7.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/29522787/",
+        urlLabel: "PubMed · PMID 29522787",
+        meta: ["Systematic review", "86,720 restorations"],
+        takeaway:
+          "A systematic review of 25 studies covering 86,720 restorations: 57.3% were replacements rather than first-time placements, and secondary caries was the most common reason for replacing a restoration (up to 59%). Fillings are most often replaced because decay returns at the margin — the exact failure gold's seal prevents.",
+      },
+    ],
+  },
+  {
+    number: "06",
+    title: "Biocompatibility — what the alloy does in the body",
+    blurb:
+      "The corrosion and ion-release science behind gold's biologic safety, and where the allergy risk really sits.",
+    refs: [
+      {
+        id: "CFG-022",
+        shortTitle: "Wataha 2000 — the biocompatibility anchor",
+        citation:
+          "Wataha JC. Biocompatibility of dental casting alloys: a review. Journal of Prosthetic Dentistry, 2000;83(2):223–34.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/10668036/",
+        urlLabel: "PubMed · PMID 10668036",
+        meta: ["Review", "Biocompatibility"],
+        takeaway:
+          "The review that anchors gold's biologic safety: the single most relevant property of a casting alloy to its safety is its corrosion, and the alloys with the highest allergy and toxicity risk are the base metals (nickel and cobalt). High-noble gold is the least corrosive, lowest-ion-release material we place.",
+        note:
+          "Accuracy note: \"least corrosive / lowest release\" is supported; the review does not support a blanket \"100% biocompatible\" claim. Gold allergy is documented but rare, so gold is described as among the most biocompatible materials rather than completely without risk.",
+      },
+      {
+        id: "CFG-023",
+        shortTitle: "Muris et al. 2015 — palladium sensitization",
+        citation:
+          "Muris J, Goossens A, Gonçalo M, et al. Sensitization to palladium and nickel in Europe and the relationship with oral disease and dental alloys. Contact Dermatitis, 2015;72(5):286–96.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/25580524/",
+        urlLabel: "PubMed · PMID 25580524",
+        meta: ["Patch-test clinics", "Metal sensitization"],
+        takeaway:
+          "Real sensitization numbers, with the right context: across six European dermatology clinics, 24.3% of referred patch-test patients reacted to palladium and 25.2% to nickel, but reaction to one metal alone was 6–7% for each. The metals behind dental-alloy allergy are the base metals; gold and the high-noble alloys are not in that risk group.",
+        note:
+          "Accuracy note: these are patients already referred to allergy clinics — the most allergy-prone population there is — so the percentages are a ceiling, not a general-population figure. Nickel is the restricted base metal; high-noble gold is the lowest-corroding choice.",
+      },
+    ],
+  },
+  {
+    number: "07",
+    title: "Implants — the Brånemark era and the gold benchmark",
+    blurb:
+      "Gold was the original material of implant dentistry — the framework and screws of the Brånemark osseointegration era — and it remains the benchmark newer systems are measured against.",
+    refs: [
+      {
+        id: "CFG-025",
+        shortTitle: "Gold in implant superstructures — the UCLA abutment",
+        citation:
+          "Lewis SG, Beumer J, Hornburg W, Moy P. The \"UCLA\" abutment. International Journal of Oral & Maxillofacial Implants, 1988;3(3):183–9.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/3074050/",
+        urlLabel: "PubMed · PMID 3074050",
+        meta: ["Implant superstructures", "Cast gold UCLA abutment"],
+        takeaway:
+          "In the origins of implant dentistry — the Brånemark osseointegration era — the superstructure and retention screws were gold, and the UCLA abutment was cast in gold. Cobalt-chromium only arrived in 1991 as a preliminary alternative to that gold standard, and newer abutments are still measured against the traditional cast-gold UCLA abutment.",
+        note:
+          "Additional sources: Kallus & Bessing 1994 (PMID 8206552), Hulterström & Nilsson 1991 (PMID 1687920), Park et al. 2014 (PMID 24605206). \"Gold\" here refers to the gold cylinders, screws, and cast-gold UCLA abutment — not a claim that one specific gold-alloy class was always used.",
+      },
+      {
+        id: "CFG-026",
+        shortTitle: "The Brånemark original protocol — a cast gold-alloy framework",
+        citation:
+          "Astrand P, Ahlqvist J, Gunne J, Nilson H. Implant treatment of patients with edentulous jaws: a 20-year follow-up. Clinical Implant Dentistry and Related Research, 2008;10(4):207–17.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/18384411/",
+        urlLabel: "PubMed · PMID 18384411",
+        meta: ["20-year follow-up", "99.2% implant survival"],
+        takeaway:
+          "The original Brånemark osseointegration protocol — the one whose 20-year data shows 99.2% implant survival — restored those implants with a cast gold-alloy framework, gold cylinders, and gold retention screws. The Brånemark Clinic's own publications still call gold the \"conventional\" framework decades later; titanium was the later alternative they tested against it.",
+        note:
+          "Additional sources (all Brånemark-era): Jemt et al. 2002 (PMID 12475159), Jemt 1995 (PMID 7472725), Aparicio 1994 (PMID 7751108), Nilner & Lekholm 1985 (PMID 3904066), Taylor et al. 1999 (PMID 10612915), Eisenmann et al. 2004 (PMID 15623055). The sources document the original protocol's cast gold-alloy framework; they do not quote a personal alloy-preference statement from Brånemark.",
+      },
+    ],
+  },
+  {
+    number: "08",
+    title: "Parafunction — the stress-era surge (media & industry reports)",
+    blurb:
+      "The demand-side story: a stress-era wave of grinding and cracked teeth that makes a durable, stress-surviving restoration matter. These are media and industry reports, not peer-reviewed literature — cited as phenomenon reports, never as science.",
+    refs: [
+      {
+        id: "Media-001",
+        shortTitle: "NYT Well — cracked teeth, pandemic stress",
+        citation:
+          "\"The pandemic's grinding: dentists report a wave of cracked, chipped teeth\" — The New York Times (Well), 2020-09-08.",
+        url: "https://www.nytimes.com/2020/09/08/well/live/dentists-tooth-teeth-cracks-fractures-coronavirus-stress-grinding.html",
+        urlLabel: "The New York Times · Sept 2020",
+        meta: ["Media report", "Parafunction"],
+        takeaway:
+          "Mainstream reporting (paywalled) — dentists nationwide reported a surge of cracked and fractured teeth from stress-related grinding during COVID.",
+      },
+      {
+        id: "Media-002",
+        shortTitle: "Chicago Tribune — grinding persists into 2022",
+        citation:
+          "Chicago Tribune coronavirus/dental coverage (2022-01-20).",
+        url: "https://www.chicagotribune.com/coronavirus/ct-dental-problems-grinding-covid-tt-20220120-c37kznud55cnfc3eqjx3gu75cq-story.html",
+        urlLabel: "Chicago Tribune · Jan 2022",
+        meta: ["Media report", "Parafunction"],
+        takeaway:
+          "The stressed-mouth phenomenon did not end with 2020 — grinding-related dental damage continued to be reported into 2022.",
+      },
+      {
+        id: "Media-003",
+        shortTitle: "USA Today — cracked-tooth reports up",
+        citation:
+          "USA Today, 2020-09-11.",
+        url: "https://www.usatoday.com/story/news/health/2020/09/11/reports-cracked-teeth-other-tooth-problems-up-amid-covid-19-stress/5761843002/",
+        urlLabel: "USA Today · Sept 2020",
+        meta: ["Media report", "Parafunction"],
+        takeaway:
+          "National reporting on the same wave — cracked teeth and other stress-related tooth problems up amid COVID.",
+      },
+      {
+        id: "Media-004",
+        shortTitle: "Sydney Morning Herald — \"new pandemic of broken teeth\"",
+        citation:
+          "Sydney Morning Herald (Australia), 2022-04-06.",
+        url: "https://www.smh.com.au/national/covid-grind-causes-new-pandemic-of-broken-teeth-dentists-warn-20220406-p5aba0.html",
+        urlLabel: "Sydney Morning Herald · Apr 2022",
+        meta: ["Media report", "Parafunction"],
+        takeaway:
+          "The phenomenon went global — Australian dentists warned of a \"new pandemic of broken teeth\" from covid grinding.",
+      },
+      {
+        id: "Media-005",
+        shortTitle: "South China Morning Post — unprecedented dental problems",
+        citation:
+          "South China Morning Post (Hong Kong), 2022.",
+        url: "https://www.scmp.com/lifestyle/health-wellness/article/3166078/pandemic-stress-triggering-unprecedented-dental-problems",
+        urlLabel: "South China Morning Post · 2022",
+        meta: ["Media report", "Parafunction"],
+        takeaway:
+          "Asian coverage of the same surge — pandemic stress triggering unprecedented dental problems.",
+      },
+      {
+        id: "Media-006",
+        shortTitle: "ADA News / HPI poll — stress-related oral conditions",
+        citation:
+          "ADA News, 2021-03: HPI poll — dentists see increased prevalence of stress-related oral health conditions.",
+        url: "https://adanews.ada.org/ada-news/2021/march/hpi-poll-dentists-see-increased-prevalence-of-stress-related-oral-health-conditions/",
+        urlLabel: "ADA News · Mar 2021",
+        meta: ["Industry survey", "Parafunction"],
+        takeaway:
+          "Industry survey data (ADA Health Policy Institute) — the profession's own numbers confirming the stress-oral-health surge.",
       },
     ],
   },
@@ -277,7 +475,7 @@ function CaseForGoldPage() {
       <article className="mx-auto max-w-4xl px-6 py-14 sm:py-20">
         {/* Hero */}
         <p className="text-sm font-semibold uppercase tracking-widest text-amber-600">
-          Reference Library · Peer-Reviewed Evidence
+          Reference Library · Evidence &amp; Sources
         </p>
         <h1 className="mt-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
           The Case for Gold
@@ -322,15 +520,15 @@ function CaseForGoldPage() {
         {/* At a glance */}
         <div className="mt-10 grid gap-4 sm:grid-cols-3">
           <div className="rounded-xl border border-gray-200 bg-white p-5 text-center shadow-sm">
-            <p className="text-3xl font-bold text-amber-600">18</p>
+            <p className="text-3xl font-bold text-amber-600">26</p>
             <p className="mt-1 text-sm font-medium text-gray-600">
-              References in this library
+              Peer-reviewed evidence entries
             </p>
           </div>
           <div className="rounded-xl border border-gray-200 bg-white p-5 text-center shadow-sm">
-            <p className="text-3xl font-bold text-amber-600">4</p>
+            <p className="text-3xl font-bold text-amber-600">6</p>
             <p className="mt-1 text-sm font-medium text-gray-600">
-              Themes: longevity, margin, materials, background
+              Media &amp; industry reports
             </p>
           </div>
           <div className="rounded-xl border border-gray-200 bg-white p-5 text-center shadow-sm">
