@@ -257,6 +257,19 @@ const THEMES: Theme[] = [
         takeaway:
           "The 1981 NYU doctrine paper on why the choice of restorative material profoundly influences the success of restored function — restoring function means the material must return the tooth to appropriate anatomic and functional form. Together with the 1971 wear study, it forms the archival spine of the hardness-and-occlusion argument.",
       },
+      {
+        id: "CFG-027",
+        shortTitle: "Branco et al. 2020 — state-of-the-art wear review",
+        citation:
+          "Branco AC, Colaço R, Figueiredo-Pina CG, Serro AP. A State-of-the-Art Review on the Wear of the Occlusal Surfaces of Natural Teeth and Prosthetic Crowns. Materials (Basel), 2020;13(16):3525.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/32785120/",
+        urlLabel: "PubMed · PMID 32785120 · open access",
+        meta: ["State-of-the-art review", "Enamel wear"],
+        takeaway:
+          "A 2020 review of two decades of occlusal-wear research, with this summary line verbatim: \"Metallic materials induce lower wear on antagonist enamel than the other classes of materials, because of their low hardness and high ductility.\" It groups restoration materials into ceramic, resin-composite, and metallic — and the metallic class wears the opposing tooth the least.",
+        note:
+          "Accuracy note: the review compares material classes — it says metallic materials (as a class) wear opposing enamel least, not gold alone. For gold-specific numbers against zirconia and lithium disilicate, pair with Kwon 2015 (CFG-007) and Lee 2014 (CFG-013).",
+      },
     ],
   },
   {
@@ -452,6 +465,40 @@ const THEMES: Theme[] = [
       },
     ],
   },
+  {
+    number: "09",
+    title: "The competitor's own words — Christensen's zirconia admissions (media & industry)",
+    blurb:
+      "Gordon Christensen helped popularize zirconia. His own 2026 clinical-evaluation newsletter and a 2024 podcast capture, in his own voice, where the material's margins and cement fall short — and where gold has held up. These are media and industry sources, not peer-reviewed literature: cited with attribution, never as science.",
+    refs: [
+      {
+        id: "Media-007",
+        shortTitle: "Christensen Clinician's Report — zirconia cementation issues (Sept 2026)",
+        citation:
+          "Christensen GJ (ed.). Solving Zirconia Cementation Issues with Conventional Glass Ionomer Cements. Clinician's Report, September 2026, Vol 19, Issue 9.",
+        url: "https://www.cliniciansreport.org",
+        urlLabel: "Clinician's Report · cliniciansreport.org",
+        meta: ["Industry newsletter", "Zirconia cementation"],
+        takeaway:
+          "The champion of zirconia describes the material's failure points in his own clinical-evaluation newsletter: roughly 1 in 20 zirconia crowns debonding in their research, carious lesions observed at zirconia margins after short-term service, and digital-workflow margins that can be open up to 100 µm — a gap the cement is left to fill, while the resin cements used to fill it shrink 2–6% as they set.",
+        note:
+          "Media/industry source — a clinical-evaluation newsletter, not peer-reviewed literature. The figures are quoted as reported in the Sept 2026 issue (Vol 19, Issue 9, a purchased print copy) and have not been independently replicated.",
+      },
+      {
+        id: "Media-008",
+        shortTitle: "Dentistry Unmasked podcast — Christensen on the lost focus (Dec 2024)",
+        citation:
+          "\"Dentistry has lost focus: Reinstating prevention over the big case with Dr. Gordon Christensen!\" — Dentistry Unmasked: A Roundtable Podcast, Dec 17, 2024.",
+        url: "https://dentistryunmasked.podbean.com/e/dentistry-has-lost-focus-reinstating-prevention-over-the-big-case-with-dr-gordon-christensen/",
+        urlLabel: "Dentistry Unmasked podcast · Dec 2024",
+        meta: ["Podcast interview", "Industry voice"],
+        takeaway:
+          "On a 2024 podcast, Gordon Christensen describes what he finds when failing zirconia restorations come out — caries deep inside the margin — and tells the room his own 67-year-old gold crowns are still in his mouth. A co-host draws the conclusion unprompted: dentists should be asking their labs for gold.",
+        note:
+          "Media/industry source — a podcast interview, not peer-reviewed literature. The account is a listener's summary of the conversation, not a verbatim transcript; the episode has no published transcript.",
+      },
+    ],
+  },
 ];
 
 function CaseForGoldPage() {
@@ -520,13 +567,13 @@ function CaseForGoldPage() {
         {/* At a glance */}
         <div className="mt-10 grid gap-4 sm:grid-cols-3">
           <div className="rounded-xl border border-gray-200 bg-white p-5 text-center shadow-sm">
-            <p className="text-3xl font-bold text-amber-600">26</p>
+            <p className="text-3xl font-bold text-amber-600">27</p>
             <p className="mt-1 text-sm font-medium text-gray-600">
               Peer-reviewed evidence entries
             </p>
           </div>
           <div className="rounded-xl border border-gray-200 bg-white p-5 text-center shadow-sm">
-            <p className="text-3xl font-bold text-amber-600">6</p>
+            <p className="text-3xl font-bold text-amber-600">8</p>
             <p className="mt-1 text-sm font-medium text-gray-600">
               Media &amp; industry reports
             </p>
