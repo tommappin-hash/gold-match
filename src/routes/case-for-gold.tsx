@@ -263,7 +263,7 @@ const THEMES: Theme[] = [
         citation:
           "Branco AC, Colaço R, Figueiredo-Pina CG, Serro AP. A State-of-the-Art Review on the Wear of the Occlusal Surfaces of Natural Teeth and Prosthetic Crowns. Materials (Basel), 2020;13(16):3525.",
         url: "https://pubmed.ncbi.nlm.nih.gov/32785120/",
-        urlLabel: "PubMed · PMID 32785120 · open access",
+        urlLabel: "PubMed · PMID 32785120 · DOI 10.3390/ma13163525 · open access",
         meta: ["State-of-the-art review", "Enamel wear"],
         takeaway:
           "A 2020 review of two decades of occlusal-wear research, with this summary line verbatim: \"Metallic materials induce lower wear on antagonist enamel than the other classes of materials, because of their low hardness and high ductility.\" It groups restoration materials into ceramic, resin-composite, and metallic — and the metallic class wears the opposing tooth the least.",
@@ -488,14 +488,14 @@ const THEMES: Theme[] = [
         id: "Media-008",
         shortTitle: "Dentistry Unmasked podcast — Christensen on the lost focus (Dec 2024)",
         citation:
-          "\"Dentistry has lost focus: Reinstating prevention over the big case with Dr. Gordon Christensen!\" — Dentistry Unmasked: A Roundtable Podcast, Dec 17, 2024.",
+          "\"Dentistry has lost focus: Reinstating prevention over the big case with Dr. Gordon Christensen!\" — Dentistry Unmasked: A Roundtable Podcast (hosts Dr. Pam Muniz & Dr. Brian Novy), Dec 17, 2024.",
         url: "https://dentistryunmasked.podbean.com/e/dentistry-has-lost-focus-reinstating-prevention-over-the-big-case-with-dr-gordon-christensen/",
         urlLabel: "Dentistry Unmasked podcast · Dec 2024",
         meta: ["Podcast interview", "Industry voice"],
         takeaway:
-          "On a 2024 podcast, Gordon Christensen describes what he finds when failing zirconia restorations come out — caries deep inside the margin — and tells the room his own 67-year-old gold crowns are still in his mouth. A co-host draws the conclusion unprompted: dentists should be asking their labs for gold.",
+          "The episode's own description: \"We've lost our way in dentistry…\". On it, Gordon Christensen tells the room his own gold crowns — placed about 67 years ago by a fellow dental student with zinc phosphate cement — are still in his mouth. After that story, a co-host suggests unprompted that dentists should be asking their labs for gold.",
         note:
-          "Media/industry source — a podcast interview, not peer-reviewed literature. The account is a listener's summary of the conversation, not a verbatim transcript; the episode has no published transcript.",
+          "Media/industry source — a podcast interview, not peer-reviewed literature. No transcript exists for this episode, so these points are reported from the episode rather than verbatim audio quotes.",
       },
     ],
   },
