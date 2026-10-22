@@ -9,7 +9,7 @@ const STUDIES = [
     category: "Marginal Integrity",
     studies: [
       {
-        citation: "Johnson GH, Lepe X, Patterson A, Schäfer O.",
+        citation: "Johnson R, Verrett R, Haney S, Mansueto M, Challa S.",
         title: "Marginal gap of milled versus cast gold restorations.",
         journal: "J Prosthodont. 2017;26(1):56–63.",
         findings: [
