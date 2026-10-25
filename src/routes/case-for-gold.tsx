@@ -469,7 +469,7 @@ const THEMES: Theme[] = [
     number: "09",
     title: "The competitor's own words — Christensen's zirconia admissions (media & industry)",
     blurb:
-      "Gordon Christensen helped popularize zirconia. His own 2026 clinical-evaluation newsletter and a 2024 podcast capture, in his own voice, where the material's margins and cement fall short — and where gold has held up. These are media and industry sources, not peer-reviewed literature: cited with attribution, never as science.",
+      "Gordon Christensen helped popularize zirconia. His own 2026 clinical-evaluation newsletter, a 2024 podcast, and an October 2026 Dental Economics column capture, in his own voice, where the material's margins, cement, and fit fall short — and where gold has held up. These are media and industry sources, not peer-reviewed literature: cited with attribution, never as science.",
     refs: [
       {
         id: "Media-007",
@@ -497,15 +497,6 @@ const THEMES: Theme[] = [
         note:
           "Media/industry source — a podcast interview, not peer-reviewed literature. No transcript exists for this episode, so these points are reported from the episode rather than verbatim audio quotes.",
       },
-    ],
-  },
-  {
-    number: "10",
-    title:
-      "The competitor's own words, continued — Christensen's zirconia workarounds (Oct 2026)",
-    blurb:
-      "Christensen's October 2026 Dental Economics column runs through the workarounds zirconia now needs — spacing crowns out of occlusion, open margins the cement must fill, loose contacts, and a veneer layer that wears opposing teeth. Media/industry source, not peer-reviewed literature: quoted with attribution, never as science.",
-    refs: [
       {
         id: "Media-009",
         shortTitle:
