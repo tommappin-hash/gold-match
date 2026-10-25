@@ -8,8 +8,8 @@ type Reference = {
   id: string;
   shortTitle: string;
   citation: string;
-  url: string;
-  urlLabel: string;
+  url?: string;
+  urlLabel?: string;
   meta: string[];
   takeaway: string;
   note?: string;
@@ -499,6 +499,27 @@ const THEMES: Theme[] = [
       },
     ],
   },
+  {
+    number: "10",
+    title:
+      "The competitor's own words, continued — Christensen's zirconia workarounds (Oct 2026)",
+    blurb:
+      "Christensen's October 2026 Dental Economics column runs through the workarounds zirconia now needs — spacing crowns out of occlusion, open margins the cement must fill, loose contacts, and a veneer layer that wears opposing teeth. Media/industry source, not peer-reviewed literature: quoted with attribution, never as science.",
+    refs: [
+      {
+        id: "Media-009",
+        shortTitle:
+          "Dental Economics — Christensen's zirconia workarounds (Oct 2026)",
+        citation:
+          "Gordon J. Christensen, DDS, PhD, MSD. \"Reducing continuing problems with zirconia crowns.\" Dental Economics, Oct 14, 2026 (October 2026 print edition).",
+        meta: ["Industry column", "Zirconia workarounds"],
+        takeaway:
+          "In Christensen's own words, five accumulated workarounds for zirconia crowns: (1) labs space them up to 500 µm out of occlusion because they're hard to adjust chairside — opposing teeth then extrude over months, and his fix is ~25 µm spacing; (2) milled zirconia margins can open up to 120 µm — \"that space must be filled with cement\" — while resin cements shrink up to 5%, and his ideal is conventional glass ionomer because it is cariostatic; (3) loose contacts trace to intraoral scanning's 20–200 µm tooth mobility, fixed with a +25 µm mill contour; (4) the esthetic feldspathic layer wears opposing teeth and wears off, exposing the zirconia underneath — his fix is internal staining in the green state plus polishing; and (5) his closing: \"Zirconia is here to stay… Be patient; improvements are coming.\"",
+        note:
+          "Media/industry source — a trade-press (Dental Economics) column, not peer-reviewed literature. No public URL in our possession; cited by title, date, and publication. Findings are quoted as reported by Christensen and have not been independently replicated.",
+      },
+    ],
+  },
 ];
 
 function CaseForGoldPage() {
@@ -573,7 +594,7 @@ function CaseForGoldPage() {
             </p>
           </div>
           <div className="rounded-xl border border-gray-200 bg-white p-5 text-center shadow-sm">
-            <p className="text-3xl font-bold text-amber-600">8</p>
+            <p className="text-3xl font-bold text-amber-600">9</p>
             <p className="mt-1 text-sm font-medium text-gray-600">
               Media &amp; industry reports
             </p>
@@ -631,31 +652,35 @@ function CaseForGoldPage() {
                     ))}
                   </div>
 
-                  <a
-                    href={ref.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-amber-700 underline underline-offset-2 hover:text-amber-800"
-                  >
-                    View the source
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      stroke="currentColor"
-                      className="h-3.5 w-3.5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
-                      />
-                    </svg>
-                  </a>
-                  <span className="mt-2 block text-xs text-gray-400">
-                    {ref.urlLabel}
-                  </span>
+                  {ref.url ? (
+                    <>
+                      <a
+                        href={ref.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-amber-700 underline underline-offset-2 hover:text-amber-800"
+                      >
+                        View the source
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2}
+                          stroke="currentColor"
+                          className="h-3.5 w-3.5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                          />
+                        </svg>
+                      </a>
+                      <span className="mt-2 block text-xs text-gray-400">
+                        {ref.urlLabel}
+                      </span>
+                    </>
+                  ) : null}
 
                   <div className="mt-4 rounded-lg border-l-4 border-amber-500 bg-amber-50 p-4">
                     <p className="text-sm leading-relaxed text-gray-800">
