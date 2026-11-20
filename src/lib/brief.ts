@@ -37,12 +37,26 @@ function tokenMatches(token: unknown): boolean {
   return a.length === b.length && timingSafeEqual(a, b);
 }
 
-function toHtml(md: string, opts: { dropStatusLine?: boolean } = {}): string {
+function toHtml(
+  md: string,
+  opts: { dropStatusLine?: boolean; dropNeverOnScreen?: boolean } = {},
+): string {
   const lines = md.replace(/\r\n/g, "\n").split("\n");
   // Drop the document's own `# Title` — the page supplies the heading.
   const firstHeading = lines.findIndex((l) => l.trim().length > 0);
   if (firstHeading >= 0 && lines[firstHeading].startsWith("# ")) {
     lines.splice(firstHeading, 1);
+  }
+  if (opts.dropNeverOnScreen) {
+    // The season plan repeats the spine's "Never on screen" block. The spine
+    // already carries it further up the same page, so skip it here at render.
+    // The source file is left exactly as it is.
+    const start = lines.findIndex((l) => /^##\s+never on screen/i.test(l.trim()));
+    if (start >= 0) {
+      let end = start + 1;
+      while (end < lines.length && !/^##\s/.test(lines[end])) end++;
+      lines.splice(start, end - start);
+    }
   }
   let body = lines.join("\n");
   if (opts.dropStatusLine) {
@@ -75,7 +89,7 @@ export const readBrief = createServerFn({ method: "POST" })
     if (!tokenMatches(data?.token)) return { ok: false as const, docs: [] as BriefDoc[] };
     const docs: BriefDoc[] = [
       { key: "spine", html: toHtml(rawDoc("message-spine")) },
-      { key: "season", html: toHtml(rawDoc("episode-plan")) },
+      { key: "season", html: toHtml(rawDoc("episode-plan"), { dropNeverOnScreen: true }) },
       { key: "schedule", html: toHtml(rawDoc("shooting-schedule")) },
       { key: "deal", html: toHtml(rawDoc("revenue-share-sheet"), { dropStatusLine: true }) },
     ];
