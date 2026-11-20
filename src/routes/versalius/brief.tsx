@@ -150,6 +150,7 @@ function BriefPage() {
   }
 
   const spine = docs.find((d) => d.key === "spine")?.html ?? "";
+  const world = docs.find((d) => d.key === "world")?.html ?? "";
   const season = docs.find((d) => d.key === "season")?.html ?? "";
   const schedule = docs.find((d) => d.key === "schedule")?.html ?? "";
   const deal = docs.find((d) => d.key === "deal")?.html ?? "";
@@ -243,18 +244,34 @@ function BriefPage() {
           <SectionNote token={token} section="What this has to say" />
         </Section>
 
-        {/* 3 — The season */}
+        {/* 3 — The world */}
         <Section
           n="3"
+          title="The world"
+          summary="Tom's own map of Vesalius Mundi — the whole oral environment, and who stands where."
+          lead="Not our invention: Tom's hand-drawn page, transcribed and ruled on. It says who exists, who is a defender, who is a villain — and, plainly, which questions are still open."
+        >
+          <Doc html={world} />
+          <SectionNote token={token} section="The world" />
+        </Section>
+
+        {/* 4 — The season */}
+        <Section
+          n="4"
           title="The season"
+          summary="Twelve shorts and one pilot over fourteen weeks — and who does what."
           lead="One season: twelve shorts and one flagship pilot, over fourteen weeks. The shorts earn attention; the pilot is the thing worth arriving for."
         >
           <Doc html={season} />
           <SectionNote token={token} section="The season" />
         </Section>
 
-        {/* 4 — The schedule */}
-        <Section n="4" title="The schedule">
+        {/* 5 — The schedule */}
+        <Section
+          n="5"
+          title="The schedule"
+          summary="No start date yet — what fits in a week, and what gets dropped first."
+        >
           <Callout>
             <strong className="font-semibold text-white">There is no start date.</strong> Day
             1 is the Monday Tom says go — and he has not said it. What follows is a shape,
@@ -265,8 +282,8 @@ function BriefPage() {
           <SectionNote token={token} section="The schedule" />
         </Section>
 
-        {/* 5 — The deal */}
-        <Section n="5" title="What the deal is">
+        {/* 6 — The deal */}
+        <Section n="6" title="What the deal is">
           <div className="mb-5 flex flex-wrap items-center gap-3">
             <span className="rounded-full border border-[#C8910B] px-3 py-1 font-outfit text-[11px] font-semibold tracking-[0.18em] text-[#E5B83C] uppercase">
               Draft — for discussion
@@ -281,9 +298,9 @@ function BriefPage() {
           <SectionNote token={token} section="What the deal is" />
         </Section>
 
-        {/* 6 — Your thoughts */}
+        {/* 7 — Your thoughts */}
         <Section
-          n="6"
+          n="7"
           title="Your thoughts"
           lead="Four questions. Short answers are fine, honest ones are better. Tom reads every word and nothing here is public."
         >
@@ -306,25 +323,75 @@ function Section({
   n,
   title,
   lead,
+  summary,
   children,
 }: {
   n: string;
   title: string;
   lead?: string;
+  /** When given, the section starts closed and this one line shows instead. */
+  summary?: string;
   children: React.ReactNode;
 }) {
+  const [open, setOpen] = useState(false);
+
+  if (!summary) {
+    return (
+      <section className="mt-12 border-t border-[#1A3A7A] pt-9">
+        <div className="flex items-baseline gap-3">
+          <span className="font-outfit text-sm font-semibold text-[#C8910B]">{n}</span>
+          <h2 className="font-bangers text-3xl leading-tight tracking-wide text-white sm:text-4xl">
+            {title}
+          </h2>
+        </div>
+        {lead && (
+          <p className="mt-3 font-serif text-[16px] leading-[1.75] text-[#C3D3EA]">{lead}</p>
+        )}
+        <div className="mt-5">{children}</div>
+      </section>
+    );
+  }
+
+  const bodyId = `section-body-${n}`;
+
   return (
     <section className="mt-12 border-t border-[#1A3A7A] pt-9">
-      <div className="flex items-baseline gap-3">
+      <div className="relative flex items-center gap-3">
         <span className="font-outfit text-sm font-semibold text-[#C8910B]">{n}</span>
-        <h2 className="font-bangers text-3xl leading-tight tracking-wide text-white sm:text-4xl">
+        <h2 className="font-bangers flex-1 text-3xl leading-tight tracking-wide text-white sm:text-4xl">
           {title}
         </h2>
+        <span
+          aria-hidden
+          className={`flex-none rounded-full border px-3 py-1 font-outfit text-[11px] font-semibold tracking-[0.18em] uppercase ${
+            open ? "border-[#C8910B] text-[#E5B83C]" : "border-[#1A3A7A] text-[#6B8DBF]"
+          }`}
+        >
+          {open ? "Close" : "Open"}
+        </span>
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-controls={bodyId}
+          className="absolute inset-0 h-full w-full cursor-pointer rounded-lg active:bg-[#0D1B3E]/60"
+        >
+          <span className="sr-only">{open ? `Close ${title}` : `Open ${title}`}</span>
+        </button>
       </div>
-      {lead && (
-        <p className="mt-3 font-serif text-[16px] leading-[1.75] text-[#C3D3EA]">{lead}</p>
+
+      {open ? (
+        <div id={bodyId}>
+          {lead && (
+            <p className="mt-3 font-serif text-[16px] leading-[1.75] text-[#C3D3EA]">{lead}</p>
+          )}
+          <div className="mt-5">{children}</div>
+        </div>
+      ) : (
+        <p id={bodyId} className="mt-2 font-serif text-[15px] leading-relaxed text-[#6B8DBF]">
+          {summary}
+        </p>
       )}
-      <div className="mt-5">{children}</div>
     </section>
   );
 }
