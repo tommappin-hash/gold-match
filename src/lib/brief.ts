@@ -82,13 +82,14 @@ export const openBrief = createServerFn({ method: "POST" })
     return ok ? { ok: true as const, token: briefToken() } : { ok: false as const };
   });
 
-/** Return the four packet documents, rendered, only to an unlocked session. */
+/** Return the packet documents, rendered, only to an unlocked session. */
 export const readBrief = createServerFn({ method: "POST" })
   .validator((data: { token: string }) => data)
   .handler(async ({ data }) => {
     if (!tokenMatches(data?.token)) return { ok: false as const, docs: [] as BriefDoc[] };
     const docs: BriefDoc[] = [
       { key: "spine", html: toHtml(rawDoc("message-spine")) },
+      { key: "world", html: toHtml(rawDoc("world-bible")) },
       { key: "season", html: toHtml(rawDoc("episode-plan"), { dropNeverOnScreen: true }) },
       { key: "schedule", html: toHtml(rawDoc("shooting-schedule")) },
       { key: "deal", html: toHtml(rawDoc("revenue-share-sheet"), { dropStatusLine: true }) },
