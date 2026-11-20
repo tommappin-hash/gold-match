@@ -25,7 +25,7 @@
 |---|---|---|
 | 2–7 | **Foundations** (shorts 1–6) | Tom's voice, macro stills, text cards. No animation, no characters. |
 | 8–13 | **Proof** (shorts 7–12) | One animated element per short — the margin glow, a gap opening, a chain forming. Still no characters. |
-| 14 | **Pilot** | The whole character world debuts here: Aureal, Compo, sePHen, TOOB, Ledger King, Masseter. First appearance, all of it. |
+| 14 | **Pilot** | The whole character world debuts here: Aurea Puella (Aureal), Compo, sePHen, TOOB, Masseter. First appearance, all of it. Cast per `world-bible.md`. |
 
 Nothing in the shorts track uses a character before week 14. The first time anyone meets Aureal is in the pilot. That is the wow, and it is not spent on a Tuesday.
 
@@ -106,7 +106,7 @@ Milled gold now hits the margin better and more consistently than cast, so the p
 
 ## The pilot — "The Long Defense" (week 14)
 
-**Format:** 3–4 minutes, 9:16, the animated character world. Script v1 is at `scripts/PILOT_EPISODE_The_Long_Defense.txt`.
+**Format:** 3–4 minutes, 9:16, the animated character world. Script v1 at `scripts/PILOT_EPISODE_The_Long_Defense.txt` is **SUPERSEDED** — its cast (Martha, Tech Sycophant, Dr. Chen, Ledger King, instrument cameos) is not Tom's. The pilot needs rewriting against `world-bible.md`. The beat shape below survives; the named characters in it do not.
 
 **It is not short 13.** It is a separate flagship: longer, character-led, and it carries the entire spine in one arc.
 
@@ -130,7 +130,7 @@ Line 3 (hardness) is the pilot's weakest landing. **Fix at animatic stage:** giv
 ## Character deployment (when each one first appears)
 
 - **Weeks 2–13 — nobody.** Shorts use Tom, teeth, text cards, and one animated element.
-- **Week 14 — everyone, in the pilot.** Aureal (speaks fully), Compo, sePHen, TOOB, Ledger King (single echo beat), Masseter, and the instrument cameos.
+- **Week 14 — everyone, in the pilot.** Aurea Puella / Aureal (speaks fully), Compo, sePHen, TOOB, Masseter. Cast per `world-bible.md`; "Seven" is sePHen, not a headcount.
 - **After week 14 —** characters can carry shorts in season 2, once the pilot has introduced them.
 
 If Tom wants a pilot trailer, it is a held option and it is not on this schedule. A trailer would spend the first-look advantage early; hold it until the cut is locked and decide then.

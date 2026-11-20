@@ -150,6 +150,7 @@ function BriefPage() {
   }
 
   const spine = docs.find((d) => d.key === "spine")?.html ?? "";
+  const world = docs.find((d) => d.key === "world")?.html ?? "";
   const season = docs.find((d) => d.key === "season")?.html ?? "";
   const schedule = docs.find((d) => d.key === "schedule")?.html ?? "";
   const deal = docs.find((d) => d.key === "deal")?.html ?? "";
@@ -243,9 +244,20 @@ function BriefPage() {
           <SectionNote token={token} section="What this has to say" />
         </Section>
 
-        {/* 3 — The season */}
+        {/* 3 — The world */}
         <Section
           n="3"
+          title="The world"
+          summary="Tom's own map of Vesalius Mundi — the whole oral environment, and who stands where."
+          lead="Not our invention: Tom's hand-drawn page, transcribed and ruled on. It says who exists, who is a defender, who is a villain — and, plainly, which questions are still open."
+        >
+          <Doc html={world} />
+          <SectionNote token={token} section="The world" />
+        </Section>
+
+        {/* 4 — The season */}
+        <Section
+          n="4"
           title="The season"
           summary="Twelve shorts and one pilot over fourteen weeks — and who does what."
           lead="One season: twelve shorts and one flagship pilot, over fourteen weeks. The shorts earn attention; the pilot is the thing worth arriving for."
@@ -254,9 +266,9 @@ function BriefPage() {
           <SectionNote token={token} section="The season" />
         </Section>
 
-        {/* 4 — The schedule */}
+        {/* 5 — The schedule */}
         <Section
-          n="4"
+          n="5"
           title="The schedule"
           summary="No start date yet — what fits in a week, and what gets dropped first."
         >
@@ -270,8 +282,8 @@ function BriefPage() {
           <SectionNote token={token} section="The schedule" />
         </Section>
 
-        {/* 5 — The deal */}
-        <Section n="5" title="What the deal is">
+        {/* 6 — The deal */}
+        <Section n="6" title="What the deal is">
           <div className="mb-5 flex flex-wrap items-center gap-3">
             <span className="rounded-full border border-[#C8910B] px-3 py-1 font-outfit text-[11px] font-semibold tracking-[0.18em] text-[#E5B83C] uppercase">
               Draft — for discussion
@@ -286,9 +298,9 @@ function BriefPage() {
           <SectionNote token={token} section="What the deal is" />
         </Section>
 
-        {/* 6 — Your thoughts */}
+        {/* 7 — Your thoughts */}
         <Section
-          n="6"
+          n="7"
           title="Your thoughts"
           lead="Four questions. Short answers are fine, honest ones are better. Tom reads every word and nothing here is public."
         >
