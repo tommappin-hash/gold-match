@@ -4,6 +4,7 @@ import {
   Outlet,
   Scripts,
   createRootRoute,
+  useRouterState,
 } from "@tanstack/react-router";
 import { type ReactNode, useState } from "react";
 
@@ -57,9 +58,14 @@ export const Route = createRootRoute({
 });
 
 function RootComponent() {
+  // The Versalius Mundi collaboration brief is a private page with its own
+  // frame — no site navigation around it.
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const bare = pathname.startsWith("/versalius/brief");
+
   return (
     <RootDocument>
-      <Nav />
+      {!bare && <Nav />}
       <Outlet />
     </RootDocument>
   );

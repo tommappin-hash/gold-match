@@ -12,3 +12,108 @@
     font-family: "Outfit", sans-serif;
   }
 }
+
+/* ---- Versalius Mundi collaboration brief (/versalius/brief) ---- */
+.vm-prose {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  line-height: 1.75;
+  color: #c3d3ea;
+}
+.vm-prose > * + * {
+  margin-top: 1rem;
+}
+.vm-prose h2,
+.vm-prose h3,
+.vm-prose h4 {
+  font-family: "Outfit", sans-serif;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+.vm-prose h2 {
+  font-size: 1.15rem;
+  margin-top: 2rem;
+  color: #e5b83c;
+}
+.vm-prose h3 {
+  font-size: 1.02rem;
+  margin-top: 1.75rem;
+}
+.vm-prose h4 {
+  font-size: 0.95rem;
+  margin-top: 1.5rem;
+  color: #6b8dbf;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.vm-prose strong {
+  color: #ffffff;
+  font-weight: 700;
+}
+.vm-prose em {
+  color: #8fb0dc;
+}
+.vm-prose a {
+  color: #e5b83c;
+  text-decoration: underline;
+}
+.vm-prose ul,
+.vm-prose ol {
+  padding-left: 1.25rem;
+}
+.vm-prose ul {
+  list-style: disc;
+}
+.vm-prose ol {
+  list-style: decimal;
+}
+.vm-prose li {
+  margin-top: 0.5rem;
+}
+.vm-prose li > ul,
+.vm-prose li > ol {
+  margin-top: 0.4rem;
+}
+.vm-prose hr {
+  border: 0;
+  border-top: 1px solid #1a3a7a;
+  margin: 2rem 0;
+}
+.vm-prose blockquote {
+  border-left: 3px solid #c8910b;
+  padding-left: 1rem;
+  color: #8fb0dc;
+  font-style: italic;
+}
+.vm-prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  background: #0d1b3e;
+  border: 1px solid #1a3a7a;
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+.vm-prose table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-family: "Outfit", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.vm-prose th,
+.vm-prose td {
+  border: 1px solid #1a3a7a;
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+  min-width: 90px;
+}
+.vm-prose th {
+  background: #0d1b3e;
+  color: #e5b83c;
+  font-weight: 700;
+}
